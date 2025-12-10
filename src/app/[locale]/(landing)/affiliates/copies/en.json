@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "title": "Affiliate Program - Earn Recurring Commissions",
+    "description": "Join our affiliate program and earn recurring commissions by referring customers",
+    "keywords": "affiliate program, recurring commissions, partner program, referral program"
+  },
+  "nav": {
+    "header": "Affiliates",
+    "footer": "Become a Partner"
+  },
+  "hero": {
+    "title": "Earn Recurring Commissions",
+    "subtitle": "Join our affiliate program and earn {rate} commission on every referral",
+    "cta": "Start Earning Today",
+    "subtext": "Free to join • No minimum sales • Monthly payouts"
+  },
+  "benefits": {
+    "title": "Why Partner With Us?",
+    "highCommissions": {
+      "title": "High Commissions",
+      "description": "Earn {rate} recurring commission on all referred customers for as long as they remain subscribed"
+    },
+    "recurring": {
+      "title": "Recurring Revenue",
+      "description": "Build a passive income stream with monthly recurring commissions"
+    },
+    "support": {
+      "title": "Full Support",
+      "description": "Get marketing materials, dedicated support, and real-time tracking dashboard"
+    }
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "step1": {
+      "title": "Sign Up",
+      "description": "Join our affiliate program for free in just 2 minutes"
+    },
+    "step2": {
+      "title": "Share Your Link",
+      "description": "Promote our product using your unique referral link or coupon code"
+    },
+    "step3": {
+      "title": "Earn Commissions",
+      "description": "Get paid monthly for every customer you refer"
+    }
+  },
+  "form": {
+    "title": "Ready to Start Earning?",
+    "subtitle": "Apply to become an affiliate partner today",
+    "notConfigured": "The affiliate application form is being set up. Please check back soon.",
+    "features": {
+      "free": "Free to join - no fees ever",
+      "instant": "Instant approval for qualified partners",
+      "dashboard": "Real-time analytics dashboard",
+      "support": "Dedicated affiliate support"
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "q1": {
+      "question": "How much do I earn per sale?",
+      "answer": "You earn 30% commission on the price paid by each new customer who registers with your coupon or link. The commission applies to their first three monthly payments as long as the customer doesn't cancel. During special campaigns, you can earn up to 50% commission. The most active affiliates receive better conditions."
+    },
+    "q2": {
+      "question": "When do I receive my commissions?",
+      "answer": "We pay you when you accumulate at least €50 in commissions. We use PayPal and will contact you to manage it, as we'll need you to issue an invoice for us to complete the transaction."
+    },
+    "q3": {
+      "question": "Who should I invite?",
+      "answer": "You should invite businesses that haven't used our product yet. They must not have connected their account, activated the free trial previously, or had their website analyzed by our system."
+    },
+    "q4": {
+      "question": "How do I know if they've used my link?",
+      "answer": "From your personal dashboard, you can see how many clicks your link has received, track leads, and monitor conversions in real-time."
+    },
+    "q5": {
+      "question": "What conditions must be met for a referral to count?",
+      "answer": "For the commission to activate, the person must: Be new to our platform (without previous trial), have used your personal coupon when registering or activated the 7-day trial from your link, complete the free trial and make their first payment."
+    },
+    "q6": {
+      "question": "Where do I find my link and coupon?",
+      "answer": "In the affiliate platform. You'll be able to see your personal coupon, your unique link, how many clicks it has received, and if someone has gone through the free trial."
+    },
+    "q7": {
+      "question": "How do the link and coupon work?",
+      "answer": "You have two ways to earn commission: Your personalized link includes tracking parameters (like ?via=youraffiliate) that let us know they came from you. Your personal coupon applies a 30% discount to the user during their first three months, and you receive commission even if they didn't use your link."
+    },
+    "q8": {
+      "question": "What do Visitor, Lead, and Conversion mean in the affiliate platform?",
+      "answer": "Visitor: anyone who clicked your link (counted once per person). Lead: people who clicked 'start free trial' and entered their card details. Conversion: those who activated the trial with their card and completed their first payment after the free period - this is when you earn your commission."
+    },
+    "q9": {
+      "question": "I shared my link but don't see any numbers in the dashboard. What's happening?",
+      "answer": "Data can take a few hours to update, sometimes up to 24 hours. If everything still shows 0 the next day, it means no one has clicked yet or hasn't progressed through the conversion funnel. Remember: a conversion only counts if the person registers from your link or uses your coupon, completes the free trial, and makes the first payment."
+    },
+    "q10": {
+      "question": "What do the most successful affiliates do?",
+      "answer": "The most successful affiliates: Forward their link to WhatsApp and Telegram groups, comment on industry accounts with their experience and link, post in Facebook groups and forums, upload stories (with text, without design) once a month, and focus on building trust before selling."
+    }
+  },
+  "calculator": {
+    "title": "Calculate Your Earnings",
+    "subtitle": "See how much you could earn as an affiliate partner",
+    "inputLabel": "How many clients can you refer per month?",
+    "monthlyTotal": "Total in {month}",
+    "calculation": "Based on {clients} clients/month",
+    "estimatedClicks": "Estimated clicks needed: {min} - {max}",
+    "conversionNote": "(based on 1-10% conversion rate)",
+    "disclaimer": "* Calculations based on {clients} new clients per month. Actual earnings may vary based on customer retention and subscription plans.",
+    "chartTitle": "Accumulated Earnings Over Time",
+    "monthNames": "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec",
+    "monthNamesComplete": "January,February,March,April,May,June,July,August,September,October,November,December",
+    "insights": {
+      "title": "Partner Success Insights",
+      "benchmark": "Realistic Benchmark:",
+      "benchmarkDetail": "With 5 clients per month, you could earn €{amount} in 6 months through recurring commissions.",
+      "qualityTip": "Focus on quality over quantity. Long-term customers are more valuable than quick churners.",
+      "trustTip": "Build trust first, sales follow naturally."
+    },
+    "tierPro": "🎯 PRO Tier Unlocked! You're earning 35% commission with 6-month duration",
+    "tierElite": "🏆 ELITE Tier Achieved! Maximum 50% commission rate activated!"
+  },
+  "stickyCta": {
+    "text": "Become an Affiliate",
+    "subtext": "Start earning today"
+  }
+}

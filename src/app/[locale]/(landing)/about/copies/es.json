@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "title": "Sobre Nosotros",
+    "description": "Conoce más sobre nuestra misión y equipo"
+  },
+  "hero": {
+    "label": "Sobre Nosotros",
+    "titleStart": "Construyendo el futuro del",
+    "titleHighlight": "Software",
+    "description": "Estamos en una misión para ayudar a los desarrolladores a construir mejores productos más rápido. Nuestro equipo es apasionado por crear herramientas que marcan la diferencia."
+  },
+  "mission": {
+    "mission": {
+      "title": "Nuestra Misión",
+      "description": "Empoderar a los desarrolladores con las herramientas que necesitan para construir productos excepcionales sin reinventar la rueda."
+    },
+    "vision": {
+      "title": "Nuestra Visión",
+      "description": "Un mundo donde los desarrolladores puedan enfocarse en la innovación en lugar de código repetitivo y tareas redundantes."
+    },
+    "values": {
+      "title": "Nuestros Valores",
+      "description": "Calidad, simplicidad y experiencia del desarrollador están en el corazón de todo lo que construimos."
+    }
+  },
+  "team": {
+    "label": "Nuestro Equipo",
+    "title": "Conoce a las personas detrás del producto",
+    "description": "Un equipo pequeño pero poderoso dedicado a construir las mejores herramientas para desarrolladores."
+  },
+  "cta": {
+    "title": "¿Listo para comenzar?",
+    "description": "Únete a miles de desarrolladores que están construyendo más rápido con nuestra plataforma.",
+    "primaryButton": "Empezar a construir",
+    "secondaryButton": "Ver Precios"
+  }
+}

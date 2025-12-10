@@ -1,0 +1,11 @@
+{
+  "home": "Home",
+  "pricing": "Pricing",
+  "about": "About",
+  "dashboard": "Dashboard",
+  "myAccount": "My Account",
+  "settings": "Settings",
+  "logout": "Logout",
+  "login": "Log In",
+  "register": "Sign Up"
+}

@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "title": "Programa de Afiliados - Gana Comisiones Recurrentes",
+    "description": "Únete a nuestro programa de afiliados y gana comisiones recurrentes refiriendo clientes",
+    "keywords": "programa de afiliados, comisiones recurrentes, programa de socios, programa de referidos"
+  },
+  "nav": {
+    "header": "Afiliados",
+    "footer": "Hazte Socio"
+  },
+  "hero": {
+    "title": "Gana Comisiones Recurrentes",
+    "subtitle": "Únete a nuestro programa de afiliados y gana {rate} de comisión en cada referido",
+    "cta": "Empieza a Ganar Hoy",
+    "subtext": "Gratis para unirse • Sin ventas mínimas • Pagos mensuales"
+  },
+  "benefits": {
+    "title": "¿Por Qué Asociarte con Nosotros?",
+    "highCommissions": {
+      "title": "Altas Comisiones",
+      "description": "Gana {rate} de comisión recurrente en todos los clientes referidos mientras permanezcan suscritos"
+    },
+    "recurring": {
+      "title": "Ingresos Recurrentes",
+      "description": "Construye un flujo de ingresos pasivos con comisiones mensuales recurrentes"
+    },
+    "support": {
+      "title": "Soporte Completo",
+      "description": "Obtén materiales de marketing, soporte dedicado y panel de seguimiento en tiempo real"
+    }
+  },
+  "howItWorks": {
+    "title": "Cómo Funciona",
+    "step1": {
+      "title": "Regístrate",
+      "description": "Únete a nuestro programa de afiliados gratis en solo 2 minutos"
+    },
+    "step2": {
+      "title": "Comparte tu Enlace",
+      "description": "Promociona nuestro producto usando tu enlace único o código de cupón"
+    },
+    "step3": {
+      "title": "Gana Comisiones",
+      "description": "Recibe pagos mensuales por cada cliente que refieras"
+    }
+  },
+  "form": {
+    "title": "¿Listo para Empezar a Ganar?",
+    "subtitle": "Solicita convertirte en socio afiliado hoy",
+    "notConfigured": "El formulario de solicitud de afiliados se está configurando. Por favor, vuelve pronto.",
+    "features": {
+      "free": "Gratis para unirse - sin tarifas nunca",
+      "instant": "Aprobación instantánea para socios calificados",
+      "dashboard": "Panel de análisis en tiempo real",
+      "support": "Soporte dedicado para afiliados"
+    }
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "q1": {
+      "question": "¿Cuánto gano por cada venta?",
+      "answer": "Ganas un 30% de comisión sobre el precio pagado por cada cliente nuevo que se registre con tu cupón o enlace. La comisión se aplica a sus tres primeros pagos mensuales siempre y cuando el cliente no se dé de baja. En ocasiones hay campañas especiales con las que puedes ganar hasta el 50% de comisión. Los afiliados más activos tienen mejores condiciones."
+    },
+    "q2": {
+      "question": "¿Cuándo cobro mis comisiones?",
+      "answer": "Te pagamos cuando acumulas al menos 50 € en comisiones. Usamos PayPal y te contactaremos para gestionarlo, ya que necesitaremos que nos emitas una factura para poder realizar la transacción."
+    },
+    "q3": {
+      "question": "¿A quién debo invitar?",
+      "answer": "A negocios que aún no hayan usado nuestro producto. No deben haber conectado su cuenta, ni activado la prueba gratuita previamente ni haber analizado su web."
+    },
+    "q4": {
+      "question": "¿Cómo sé si han usado mi enlace?",
+      "answer": "Desde tu panel personal puedes ver cuántos clics ha tenido tu enlace, seguir leads y monitorear conversiones en tiempo real."
+    },
+    "q5": {
+      "question": "¿Qué condiciones hay para que cuente como cliente mío?",
+      "answer": "Para que la comisión se active, la persona debe: Ser nueva en nuestra plataforma (sin prueba anterior), haber usado tu cupón personal al registrarse o que haga la activación de la prueba de 7 días desde tu enlace, completar la prueba gratuita y hacer su primer pago."
+    },
+    "q6": {
+      "question": "¿Dónde encuentro mi enlace y mi cupón?",
+      "answer": "En la plataforma de afiliados. Podrás ver tu cupón personal, tu enlace único, cuántos clics ha recibido, y si alguien ha pasado por la prueba gratuita."
+    },
+    "q7": {
+      "question": "¿Cómo funciona el enlace y el cupón?",
+      "answer": "Tienes dos formas de asegurarte de que una persona te genera comisión: Tu enlace personalizado incluye algo como ?via=tuafiliado, que nos permite registrar que esa persona ha llegado gracias a ti. Tu cupón personal aplica un 30% de descuento al usuario durante sus tres primeros meses, y tú también recibes la comisión aunque no haya entrado desde tu enlace."
+    },
+    "q8": {
+      "question": "¿Qué significan Visitor, Lead y Conversion en la plataforma de afiliados?",
+      "answer": "Visitor: cualquier persona que haya hecho clic en tu enlace (aunque haga varios clics, solo cuenta una vez). Lead: personas que han hecho clic en 'empezar prueba gratuita' y han introducido su tarjeta. Conversion: son los que activaron la prueba con su tarjeta y, al terminar los días gratis, el sistema ha podido hacer el primer cobro - ahí es cuando tú ganas tu comisión."
+    },
+    "q9": {
+      "question": "He compartido mi enlace, pero no veo ningún número en el panel. ¿Qué pasa?",
+      "answer": "Los datos pueden tardar unas horas en actualizarse. A veces hasta 24 horas. Si al día siguiente sigue apareciendo todo en 0, es que todavía nadie ha hecho clic o no ha avanzado en las fases del embudo. Recuerda: una conversión solo cuenta si la persona se registra desde tu enlace o usa tu cupón, completa la prueba gratuita y realiza el primer pago."
+    },
+    "q10": {
+      "question": "¿Qué hacen los afiliados que más ganan?",
+      "answer": "Los más exitosos: Reenvían su enlace a grupos de WhatsApp y Telegram, comentan en cuentas del sector con su experiencia y enlace, publican en grupos de Facebook y foros, suben stories (con texto, sin diseño) 1 vez al mes, y se enfocan en construir confianza antes de vender."
+    }
+  },
+  "calculator": {
+    "title": "Calcula tus Ganancias",
+    "subtitle": "Mira cuánto podrías ganar como socio afiliado",
+    "inputLabel": "¿Cuántos clientes puedes referir por mes?",
+    "monthlyTotal": "Total en {month}",
+    "calculation": "Basado en {clients} clientes/mes",
+    "estimatedClicks": "Clics estimados necesarios: {min} - {max}",
+    "conversionNote": "(basado en tasa de conversión del 1-10%)",
+    "disclaimer": "* Cálculos basados en {clients} nuevos clientes por mes. Las ganancias reales pueden variar según la retención de clientes y los planes de suscripción.",
+    "chartTitle": "Ganancias Acumuladas en el Tiempo",
+    "monthNames": "Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic",
+    "monthNamesComplete": "Enero,Febrero,Marzo,Abril,Mayo,Junio,Julio,Agosto,Septiembre,Octubre,Noviembre,Diciembre",
+    "insights": {
+      "title": "Consejos para el Éxito",
+      "benchmark": "Referencia Realista:",
+      "benchmarkDetail": "Con 5 clientes por mes, podrías ganar €{amount} en 6 meses a través de comisiones recurrentes.",
+      "qualityTip": "Enfócate en la calidad sobre la cantidad. Los clientes a largo plazo son más valiosos que los que cancelan rápidamente.",
+      "trustTip": "Construye confianza primero, las ventas vienen naturalmente."
+    },
+    "tierPro": "🎯 ¡Nivel PRO Desbloqueado! Estás ganando 35% de comisión con duración de 6 meses",
+    "tierElite": "🏆 ¡Nivel ELITE Alcanzado! ¡Tasa máxima de comisión del 50% activada!"
+  },
+  "stickyCta": {
+    "text": "Hazte Afiliado",
+    "subtext": "Empieza a ganar hoy"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "Privacy Policy",
+    "description": "Learn how we collect, use, and protect your personal information"
+  },
+  "title": "Privacy Policy",
+  "lastUpdated": "Last updated",
+  "warning": {
+    "title": "Development Template - Not Legal",
+    "message": "This is a template for development only. Customize with your actual business details and review with a legal professional before launch."
+  },
+  "intro": {
+    "title": "Introduction",
+    "content": "At {companyName}, we respect your privacy and are committed to protecting your personal data. This privacy policy explains how we collect, use, and safeguard your information."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "content": "If you have any questions about this privacy policy, please contact us:",
+    "updatePrompt": "⚠️ Remember to update this contact information with your actual legal contact details before launching to production."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "title": "About Us",
+    "description": "Learn more about our mission and team"
+  },
+  "hero": {
+    "label": "About Us",
+    "titleStart": "Building the Future of",
+    "titleHighlight": "Software",
+    "description": "We're on a mission to help developers build better products faster. Our team is passionate about creating tools that make a real difference."
+  },
+  "mission": {
+    "mission": {
+      "title": "Our Mission",
+      "description": "To empower developers with the tools they need to build exceptional products without reinventing the wheel."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "A world where developers can focus on innovation instead of boilerplate code and repetitive tasks."
+    },
+    "values": {
+      "title": "Our Values",
+      "description": "Quality, simplicity, and developer experience are at the heart of everything we build."
+    }
+  },
+  "team": {
+    "label": "Our Team",
+    "title": "Meet the People Behind the Product",
+    "description": "A small but mighty team dedicated to building the best developer tools."
+  },
+  "cta": {
+    "title": "Ready to Get Started?",
+    "description": "Join thousands of developers who are building faster with our platform.",
+    "primaryButton": "Start Building",
+    "secondaryButton": "View Pricing"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "title": "Política de Privacidad",
+    "description": "Conoce cómo recopilamos, usamos y protegemos tu información personal"
+  },
+  "title": "Política de Privacidad",
+  "lastUpdated": "Última actualización",
+  "warning": {
+    "title": "Plantilla de Desarrollo - No Legal",
+    "message": "Esta es una plantilla solo para desarrollo. Personaliza con los detalles reales de tu negocio y revisa con un profesional legal antes del lanzamiento."
+  },
+  "intro": {
+    "title": "Introducción",
+    "content": "En {companyName}, respetamos tu privacidad y estamos comprometidos a proteger tus datos personales. Esta política de privacidad explica cómo recopilamos, usamos y protegemos tu información."
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "content": "Si tienes alguna pregunta sobre esta política de privacidad, contáctanos:",
+    "updatePrompt": "⚠️ Recuerda actualizar esta información de contacto con tus detalles legales reales antes de lanzar a producción."
+  }
+}
