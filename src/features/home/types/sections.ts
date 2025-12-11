@@ -51,6 +51,11 @@ export interface HeroContent {
   backgroundImage?: string;
   backgroundVideo?: string;
   backgroundEffect?: 'dots' | 'grid' | 'gradient' | 'none';
+  // Modulary-specific: Custom illustration
+  illustration?: {
+    type: 'fragmentation-to-unity' | 'custom';
+    customComponent?: string;
+  };
 }
 
 // Features Section
@@ -297,6 +302,100 @@ export interface AffiliateModuleContent {
     href: string;
   };
   ctaSubtext?: Record<string, string>;
+}
+
+// ========== MODULARY-SPECIFIC SECTIONS ==========
+
+// Problem Section (Simple grid of pain points)
+export interface ProblemSectionContent {
+  headline: Record<string, string>;
+  subheadline?: Record<string, string>;
+  problems: Array<{
+    id: string;
+    icon: string; // lucide icon name
+    title: Record<string, string>;
+    description: Record<string, string>;
+  }>;
+}
+
+// Target Users Section
+export interface TargetUsersSectionContent {
+  headline: Record<string, string>;
+  subheadline?: Record<string, string>;
+  users: Array<{
+    id: string;
+    icon: string; // lucide icon name
+    title: Record<string, string>; // "Coaches", "Trainers", etc.
+    description: Record<string, string>;
+    features?: Array<Record<string, string>>; // Key features for this user type
+  }>;
+}
+
+// Solution Section
+export interface SolutionSectionContent {
+  headline: Record<string, string>;
+  subheadline: Record<string, string>;
+  benefits: Array<{
+    id: string;
+    icon: string;
+    title: Record<string, string>;
+    description: Record<string, string>;
+  }>;
+  cta?: {
+    text: Record<string, string>;
+    href: string;
+  };
+  image?: string; // Optional visual/screenshot
+}
+
+// AI Capabilities Section
+export interface AISectionContent {
+  headline: Record<string, string>;
+  subheadline: Record<string, string>;
+  capabilities: Array<{
+    id: string;
+    icon: string; // Sparkles, Zap, Brain, etc.
+    title: Record<string, string>;
+    description: Record<string, string>;
+    badge?: Record<string, string>; // "Beta", "New", etc.
+  }>;
+  badge?: {
+    text: Record<string, string>;
+    variant?: 'default' | 'secondary';
+  };
+}
+
+// Use Cases Section
+export interface UseCasesSectionContent {
+  headline: Record<string, string>;
+  subheadline?: Record<string, string>;
+  layout: 'grid' | 'carousel';
+  useCases: Array<{
+    id: string;
+    title: Record<string, string>;
+    description: Record<string, string>;
+    icon?: string;
+    image?: string;
+    tags?: Array<Record<string, string>>; // "Fitness", "Education", etc.
+  }>;
+}
+
+// Modules Section (Pre-built components)
+export interface ModulesSectionContent {
+  headline: Record<string, string>;
+  subheadline?: Record<string, string>;
+  modules: Array<{
+    id: string;
+    name: Record<string, string>;
+    description: Record<string, string>;
+    icon: string;
+    category: Record<string, string>; // "UI", "Forms", "Commerce", etc.
+    badge?: Record<string, string>; // "Popular", "New", etc.
+  }>;
+  cta?: {
+    text: Record<string, string>;
+    href: string;
+  };
 }
 
 // Complete Home Content

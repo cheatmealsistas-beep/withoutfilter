@@ -1,136 +1,117 @@
-import { getTranslations, getLocale } from 'next-intl/server';
+import { getLocale } from 'next-intl/server';
 import {
-  HeroSection,
-  ProblemSolutionSection,
-  FeaturesSection,
-  HowItWorksSection,
-  TechStackSection,
-  SocialProofSection,
-  PricingSection,
-  AffiliateModuleSection,
-  UrgencySection,
-  FAQSection,
-  CTASection,
-  homeContent
-} from '@/features/home';
-import { getSetting } from '@/features/admin/admin.query';
-import type { AffiliateProgramSettings } from '@/features/admin/types';
+  HeroSectionModulary,
+  ProblemSectionModulary,
+  TargetUsersSectionModulary,
+  SolutionSectionModulary,
+  AISectionModulary,
+  UseCasesSectionModulary,
+  ModulesSectionModulary,
+  HowItWorksSectionModulary,
+  PricingSectionModulary,
+  FAQSectionModulary,
+  modularityContent
+} from '@/features/home/index-modulary';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'seo.landing' });
+
+  const title = locale === 'es'
+    ? 'Modulary - Crea Aplicaciones Sin Código'
+    : 'Modulary - Build Apps Without Code';
+
+  const description = locale === 'es'
+    ? 'Plataforma para coaches, trainers, creadores y terapeutas. Crea aplicaciones profesionales sin necesidad de código.'
+    : 'Platform for coaches, trainers, creators, and therapists. Build professional apps without writing code.';
 
   return {
-    title: t('title'),
-    description: t('description'),
+    title,
+    description,
   };
 }
 
-export default async function HomePage() {
+export default async function ModularyHomePage() {
   const locale = await getLocale();
-
-  // Get affiliate settings to check if home module should be displayed
-  const affiliateSettings = await getSetting<AffiliateProgramSettings>('affiliate_program');
-  const showAffiliateModule = affiliateSettings?.enabled && affiliateSettings?.display_in_home;
 
   return (
     <>
       {/* Hero Section */}
-      {homeContent.hero.enabled && (
-        <HeroSection
-          content={homeContent.hero.content}
+      {modularityContent.hero.enabled && (
+        <HeroSectionModulary
+          content={modularityContent.hero.content}
           locale={locale}
-          variant="A"
         />
       )}
 
-      {/* Problem/Solution Comparison */}
-      {homeContent.problemSolution?.enabled && (
-        <ProblemSolutionSection
-          content={homeContent.problemSolution.content}
+      {/* Problem Section */}
+      {modularityContent.problem.enabled && (
+        <ProblemSectionModulary
+          content={modularityContent.problem.content}
           locale={locale}
-          variant="A"
         />
       )}
 
-      {/* Features Grid */}
-      {homeContent.features.enabled && (
-        <FeaturesSection
-          content={homeContent.features.content}
+      {/* Target Users Section */}
+      {modularityContent.targetUsers.enabled && (
+        <TargetUsersSectionModulary
+          content={modularityContent.targetUsers.content}
           locale={locale}
-          variant="A"
         />
       )}
 
-      {/* How It Works */}
-      {homeContent.howItWorks?.enabled && (
-        <HowItWorksSection
-          content={homeContent.howItWorks.content}
+      {/* Solution Section */}
+      {modularityContent.solution.enabled && (
+        <SolutionSectionModulary
+          content={modularityContent.solution.content}
           locale={locale}
-          variant="A"
         />
       )}
 
-      {/* Tech Stack */}
-      {homeContent.techStack?.enabled && (
-        <TechStackSection
-          content={homeContent.techStack.content}
+      {/* AI Capabilities Section */}
+      {modularityContent.ai.enabled && (
+        <AISectionModulary
+          content={modularityContent.ai.content}
           locale={locale}
-          variant="A"
         />
       )}
 
-      {/* Social Proof */}
-      {homeContent.socialProof.enabled && (
-        <SocialProofSection
-          content={homeContent.socialProof.content}
+      {/* Use Cases Section */}
+      {modularityContent.useCases.enabled && (
+        <UseCasesSectionModulary
+          content={modularityContent.useCases.content}
           locale={locale}
-          variant="A"
         />
       )}
 
-      {/* Pricing */}
-      {homeContent.pricing.enabled && (
-        <PricingSection
-          content={homeContent.pricing.content}
+      {/* Modules Section */}
+      {modularityContent.modules.enabled && (
+        <ModulesSectionModulary
+          content={modularityContent.modules.content}
           locale={locale}
-          variant="A"
         />
       )}
 
-      {/* Affiliate Module - Dynamic from Database */}
-      {showAffiliateModule && homeContent.affiliateModule && (
-        <AffiliateModuleSection
-          content={homeContent.affiliateModule.content}
+      {/* How It Works Section */}
+      {modularityContent.howItWorks.enabled && (
+        <HowItWorksSectionModulary
+          content={modularityContent.howItWorks.content}
           locale={locale}
-          variant="A"
         />
       )}
 
-      {/* Urgency/FOMO */}
-      {homeContent.urgency?.enabled && (
-        <UrgencySection
-          content={homeContent.urgency.content as any}
+      {/* Pricing Section */}
+      {modularityContent.pricing.enabled && (
+        <PricingSectionModulary
+          content={modularityContent.pricing.content}
           locale={locale}
-          variant="A"
         />
       )}
 
-      {/* FAQ */}
-      {homeContent.faq?.enabled && (
-        <FAQSection
-          content={homeContent.faq.content as any}
+      {/* FAQ Section */}
+      {modularityContent.faq.enabled && (
+        <FAQSectionModulary
+          content={modularityContent.faq.content}
           locale={locale}
-          variant="A"
-        />
-      )}
-
-      {/* Final CTA */}
-      {homeContent.cta.enabled && (
-        <CTASection
-          content={homeContent.cta.content}
-          locale={locale}
-          variant="A"
         />
       )}
     </>

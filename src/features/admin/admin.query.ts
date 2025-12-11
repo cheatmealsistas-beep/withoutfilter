@@ -50,8 +50,12 @@ export async function getSetting<T = Record<string, unknown>>(
     .eq('key', key)
     .single();
 
-  if (error || !data) {
+  // Only log error if it's not a "not found" error (PGRST116)
+  if (error && error.code !== 'PGRST116') {
     console.error(`Error fetching setting ${key}:`, error);
+  }
+
+  if (!data) {
     return null;
   }
 

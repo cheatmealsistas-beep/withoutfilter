@@ -1,8 +1,14 @@
 /**
  * Font Imports
- * Current font: Inter (see brand.font in src/shared/config/brand.ts)
- * To change font: see src/shared/config/README.md
+ * Modulary: Poppins (headings) + Inter (body)
  */
+/* Poppins - Para headings (más personalidad) */
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/poppins/700.css';
+
+/* Inter - Para body (óptima legibilidad) */
 @import '@fontsource/inter/400.css';
 @import '@fontsource/inter/500.css';
 @import '@fontsource/inter/600.css';
@@ -20,48 +26,50 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71% 4%;
+    /* Modulary - Minimalista Premium (Sky Blue + Purple) */
+    --background: 0 0% 100%; /* #FFFFFF - Pure white */
+    --foreground: 222 47% 11%; /* #0F172A - Slate 900 */
     --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
-    --primary: 220 91% 54%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 199 89% 48%; /* #0EA5E9 - Sky 500 (Confianza + Claridad) */
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 224 71% 4%;
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
-    --accent: 220 14% 96%;
-    --accent-foreground: 224 71% 4%;
+    --secondary: 215 20% 65%; /* #94A3B8 - Slate 400 */
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%; /* #F1F5F9 - Slate 100 */
+    --muted-foreground: 215 16% 47%; /* #64748B - Slate 500 */
+    --accent: 258 90% 66%; /* #8B5CF6 - Purple 500 (Creatividad + Premium) */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 220 91% 54%;
-    --radius: 0.5rem;
+    --border: 214 32% 91%; /* #E2E8F0 - Slate 200 */
+    --input: 214 32% 91%;
+    --ring: 199 89% 48%;
+    --radius: 0.75rem; /* Menos redondeado - más profesional */
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 213 31% 91%;
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
-    --popover: 224 71% 4%;
-    --popover-foreground: 213 31% 91%;
-    --primary: 220 91% 54%;
+    /* Modulary Dark Mode - Professional Dark */
+    --background: 222 47% 11%; /* #0F172A - Slate 900 */
+    --foreground: 210 40% 98%; /* #F8FAFC - Slate 50 */
+    --card: 217 33% 17%; /* #1E293B - Slate 800 */
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 199 89% 48%; /* #0EA5E9 - Sky 500 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 213 31% 91%;
-    --muted: 215 28% 17%;
-    --muted-foreground: 218 11% 65%;
-    --accent: 215 28% 17%;
-    --accent-foreground: 213 31% 91%;
-    --destructive: 0 63% 31%;
+    --secondary: 215 20% 35%; /* Slate darker */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 28% 17%; /* #1E293B - Slate 800 */
+    --muted-foreground: 215 20% 65%; /* #94A3B8 - Slate 400 */
+    --accent: 258 90% 66%; /* #8B5CF6 - Purple 500 */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 63% 45%;
     --destructive-foreground: 0 0% 100%;
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
-    --ring: 220 91% 54%;
+    --border: 215 28% 25%; /* #334155 - Slate 700 */
+    --input: 215 28% 25%;
+    --ring: 199 89% 48%;
   }
 
   /* ========================================================================= */
@@ -133,6 +141,12 @@
   select,
   textarea {
     @apply transition-colors duration-200;
+  }
+
+  /* Modulary: Poppins para headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+    font-weight: 600;
   }
 }
 

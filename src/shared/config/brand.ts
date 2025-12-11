@@ -17,20 +17,20 @@ export const brand = {
   // ═══════════════════════════════════════════════════════════════════
 
   /** Your product/company name */
-  name: 'AI SaaS',
+  name: 'Modulary',
 
   /** Short tagline (appears in hero, metadata) */
-  tagline: 'Build faster with AI',
+  tagline: 'Build Apps Without Code',
 
   // ═══════════════════════════════════════════════════════════════════
   // CONTACT & URLS
   // ═══════════════════════════════════════════════════════════════════
 
   /** Production website URL (used for canonical URLs, sitemap, schemas) */
-  website: 'https://example.com',
+  website: 'https://www.modulary.app',
 
   /** Support email address */
-  support: 'support@example.com',
+  support: 'support@modulary.app',
 
   // ═══════════════════════════════════════════════════════════════════
   // ASSETS (place files in /public/)
