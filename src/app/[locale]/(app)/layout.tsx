@@ -1,16 +1,29 @@
+import { redirect } from 'next/navigation';
 import { AppLayout } from '@/shared/components/layouts';
 import { AppProvider } from '@/shared/providers';
 import { getUser, isAdmin } from '@/shared/auth';
 import { getSubscription } from '@/features/billing/billing.query';
+import { getOnboardingState } from '@/features/onboarding/onboarding.query';
 import type { AppSubscription } from '@/shared/providers/app-provider';
 import { PageTracker } from '@/features/analytics/page-tracker';
 
 export default async function AppRouteLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
   const user = await getUser();
+
+  // Redirect to onboarding if not completed
+  if (user) {
+    const { data: onboardingState } = await getOnboardingState(user.id);
+    if (onboardingState && !onboardingState.isCompleted && !onboardingState.isSkipped) {
+      redirect(`/${locale}/onboarding`);
+    }
+  }
 
   // Check if user is admin
   const userIsAdmin = user ? await isAdmin() : false;

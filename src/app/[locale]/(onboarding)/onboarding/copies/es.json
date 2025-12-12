@@ -1,0 +1,87 @@
+{
+  "step0": {
+    "title": "¡Bienvenido a Modulary!",
+    "subtitle": "Vamos a crear tu espacio digital en menos de 2 minutos.",
+    "nameLabel": "¿Cómo te llamas?",
+    "nameHelp": "Este nombre aparecerá en tu perfil público.",
+    "namePlaceholder": "María García",
+    "continue": "Continuar"
+  },
+  "step1": {
+    "title": "¿A qué te dedicas?",
+    "subtitle": "Esto nos ayuda a personalizar tu experiencia.",
+    "types": {
+      "coach": {
+        "label": "Coach",
+        "description": "Coaching personal o profesional"
+      },
+      "therapist": {
+        "label": "Terapeuta",
+        "description": "Terapia y bienestar emocional"
+      },
+      "trainer": {
+        "label": "Formador",
+        "description": "Cursos y formación online"
+      },
+      "content_creator": {
+        "label": "Creador",
+        "description": "Contenido digital y cursos"
+      },
+      "mentor": {
+        "label": "Mentor",
+        "description": "Mentoría y asesoramiento"
+      },
+      "other": {
+        "label": "Otro",
+        "description": "Otro tipo de profesional"
+      }
+    }
+  },
+  "step2": {
+    "title": "Crea tu primera app",
+    "subtitle": "Tu app es el espacio donde tus clientes accederán a tu contenido.",
+    "appNameLabel": "Nombre de tu app",
+    "appNamePlaceholder": "Coaching con María",
+    "slugLabel": "Tu URL",
+    "slugHelp": "Esta será tu URL única para compartir con tus clientes.",
+    "slugPlaceholder": "mi-espacio",
+    "slugAvailable": "¡Disponible!",
+    "slugTaken": "Este slug ya está en uso",
+    "slugInvalid": "Solo letras, números y guiones. No puede empezar ni terminar con guión.",
+    "slugMinLength": "Mínimo 3 caracteres",
+    "continue": "Continuar"
+  },
+  "step3": {
+    "title": "Añade tu logo",
+    "subtitle": "Dale personalidad a tu espacio. Puedes añadirlo después.",
+    "upload": "Subir logo",
+    "fileTypes": "PNG, JPG o SVG. Máximo 2MB.",
+    "continue": "Continuar",
+    "skip": "Saltar por ahora"
+  },
+  "step4": {
+    "title": "¡Tu página está casi lista!",
+    "subtitle": "Personaliza el contenido de tu página de inicio.",
+    "edit": "Editar",
+    "preview": "Vista previa",
+    "headlineLabel": "Título principal",
+    "headlinePlaceholder": "Transforma tu vida...",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Cuéntale a tus clientes qué ofreces...",
+    "ctaLabel": "Texto del botón",
+    "ctaPlaceholder": "Reservar ahora",
+    "saving": "Guardando...",
+    "saved": "Guardado",
+    "complete": "¡Mi página está lista!",
+    "completing": "Finalizando..."
+  },
+  "navigation": {
+    "back": "Atrás",
+    "skip": "Saltar por ahora"
+  },
+  "errors": {
+    "notAuthenticated": "No autenticado",
+    "generic": "Ha ocurrido un error",
+    "appNotFound": "No se encontró la app"
+  }
+}

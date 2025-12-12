@@ -1,0 +1,40 @@
+{
+  "title": "Elige tu plan",
+  "subtitle": "Empieza con 90 días de prueba gratis. Sin tarjeta de crédito.",
+  "trial_badge": "90 días de prueba gratis",
+  "popular": "Más popular",
+  "free": "Gratis",
+  "month": "mes",
+  "start_free": "Empezar gratis",
+  "select_plan": "Empezar prueba",
+  "skip_for_now": "Saltar por ahora, decidiré después",
+  "loading": "Iniciando...",
+  "trial_started": "¡Tu prueba de 90 días ha comenzado!",
+  "error_generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
+  "plans": {
+    "free": {
+      "name": "Starter",
+      "description": "Perfecto para empezar y explorar la plataforma"
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Para profesionales que necesitan más espacio y funciones"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Todo lo que necesitas para escalar tu negocio"
+    }
+  },
+  "features": {
+    "storage_basic": "500 MB de almacenamiento",
+    "storage_extended": "5 GB de almacenamiento",
+    "storage_unlimited": "Almacenamiento ilimitado",
+    "modules_basic": "Módulos básicos (Inicio, Sobre mí, Contacto)",
+    "modules_all": "Todos los módulos incluidos",
+    "support_community": "Soporte de la comunidad",
+    "support_priority": "Soporte prioritario por email",
+    "custom_domain": "Dominio personalizado",
+    "ai_creator": "Creador de contenido con IA",
+    "analytics_advanced": "Analíticas avanzadas"
+  }
+}
