@@ -70,7 +70,8 @@ export function GoogleOneTap() {
         if (data.user) {
           // Save the last login method
           setLastMethod('google');
-          router.push(`/${locale}/dashboard`);
+          // Redirect to onboarding - it will redirect to admin if user already has organization
+          router.push(`/${locale}/onboarding`);
           router.refresh();
         }
       } catch (err) {

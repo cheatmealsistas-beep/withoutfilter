@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import {
   Accordion,
   AccordionContent,
@@ -64,12 +65,12 @@ export function FAQSectionModulary({ content, locale }: FAQSectionProps) {
               {locale === 'es'
                 ? '¿Todavía tienes preguntas? '
                 : 'Still have questions? '}
-              <a
+              <Link
                 href="/contact"
                 className="text-primary font-semibold hover:underline"
               >
                 {locale === 'es' ? 'Contáctanos' : 'Contact us'}
-              </a>
+              </Link>
             </p>
           </div>
         )}

@@ -57,7 +57,7 @@ export function OnboardingWizard({ initialData, locale }: OnboardingWizardProps)
     try {
       const result = await skipOnboardingAction();
       if (result.success) {
-        router.push(`/${locale}/dashboard`);
+        router.push(`/${locale}/choose-plan`);
       } else {
         toast.error(result.error ?? 'Error al saltar');
       }
