@@ -32,8 +32,8 @@ const plans = [
   },
 ];
 
-export default function PricingPage() {
-  const t = useTranslations('pricing');
+export default function ChoosePlanPage() {
+  const t = useTranslations('choose-plan');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);

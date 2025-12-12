@@ -44,10 +44,11 @@ export async function signUp(
   });
 
   if (error) {
-    return { user: null, error: error.message };
+    return { user: null, session: null, error: error.message };
   }
 
-  return { user: data.user, error: null };
+  // If session exists, email confirmation is disabled - user is already logged in
+  return { user: data.user, session: data.session, error: null };
 }
 
 /**

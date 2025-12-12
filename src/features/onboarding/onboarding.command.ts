@@ -1,8 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
-import { createClientServer } from '@/shared/database/supabase';
 import type { ProfessionalType, HomeContent } from './types';
 
-// Admin client with service role for operations that need to bypass RLS
+// Admin client with service role for all onboarding operations (bypass RLS)
 function createAdminClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -23,7 +22,7 @@ export async function saveStep0(
   userId: string,
   fullName: string
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { error } = await supabase
     .from('profiles')
@@ -43,7 +42,7 @@ export async function saveStep1(
   userId: string,
   professionalType: ProfessionalType
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { error } = await supabase
     .from('profiles')
@@ -120,7 +119,7 @@ export async function saveStep3(
   organizationId: string,
   logoUrl: string | null
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   // Update organization logo if provided
   if (logoUrl) {
@@ -150,7 +149,7 @@ export async function saveStep4(
   organizationId: string,
   content: HomeContent
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { error } = await supabase
     .from('app_modules')
@@ -168,7 +167,7 @@ export async function setDefaultHomeContent(
   organizationId: string,
   content: HomeContent
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { error } = await supabase
     .from('app_modules')
@@ -185,7 +184,7 @@ export async function setDefaultHomeContent(
 export async function completeOnboarding(
   userId: string
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { error } = await supabase
     .from('profiles')
@@ -203,7 +202,7 @@ export async function completeOnboarding(
 export async function skipOnboarding(
   userId: string
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { error } = await supabase
     .from('profiles')

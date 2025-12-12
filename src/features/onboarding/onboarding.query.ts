@@ -1,5 +1,20 @@
+import { createClient } from '@supabase/supabase-js';
 import { createClientServer } from '@/shared/database/supabase';
 import type { OnboardingState, HomeContent } from './types';
+
+// Admin client for queries that need to bypass RLS
+function createAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
+}
 
 /**
  * Get onboarding state for a user
@@ -41,7 +56,7 @@ export async function getOnboardingState(
 export async function checkSlugAvailable(
   slug: string
 ): Promise<{ available: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase
     .from('organizations')

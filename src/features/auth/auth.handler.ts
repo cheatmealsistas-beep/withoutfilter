@@ -78,7 +78,7 @@ export async function handleRegister(
     };
   }
 
-  const { user, error } = await signUp(validationResult.data, attributionData, locale);
+  const { user, session, error } = await signUp(validationResult.data, attributionData, locale);
 
   if (error) {
     // Check if it's a duplicate email error
@@ -97,6 +97,15 @@ export async function handleRegister(
     await syncAdminRoleFromWhitelist(user.id, user.email);
   }
 
+  // If session exists, email confirmation is disabled - user is logged in
+  if (session) {
+    return {
+      success: true,
+      // No messageKey means redirect will happen in action
+    };
+  }
+
+  // Email confirmation required
   return {
     success: true,
     messageKey: 'checkEmailVerification',
