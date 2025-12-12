@@ -1,5 +1,5 @@
 // Components
-export { PublicHero, PublicFooter, EditBar, PublicBlocks } from './components';
+export { PublicHero, PublicFooter, PublicNavbar, EditBar, PublicBlocks } from './components';
 
 // Block components
 export {
@@ -17,6 +17,7 @@ export {
   getPublicHomeContent,
   isAppOwner,
   getPublishedPageContent,
+  getEnabledModules,
 } from './public-app.query';
 
 // Types
