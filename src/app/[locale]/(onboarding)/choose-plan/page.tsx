@@ -38,29 +38,7 @@ export default function ChoosePlanPage() {
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
-  const handleStartTrial = async () => {
-    setLoading(true);
-    setSelectedPlan('free');
-
-    const result = await startTrialAction();
-
-    if (result.success) {
-      toast.success(t('trial_started'));
-      router.push('/dashboard');
-    } else {
-      toast.error(result.error || t('error_generic'));
-      setLoading(false);
-      setSelectedPlan(null);
-    }
-  };
-
   const handleSelectPlan = async (planId: string) => {
-    if (planId === 'free') {
-      await handleStartTrial();
-      return;
-    }
-
-    // For paid plans, just start trial for now (Stripe integration later)
     setLoading(true);
     setSelectedPlan(planId);
 
@@ -68,7 +46,12 @@ export default function ChoosePlanPage() {
 
     if (result.success) {
       toast.success(t('trial_started'));
-      router.push('/dashboard');
+      // Redirect to owner admin dashboard
+      if (result.slug) {
+        router.push(`/app/${result.slug}/admin`);
+      } else {
+        router.push('/dashboard');
+      }
     } else {
       toast.error(result.error || t('error_generic'));
       setLoading(false);
@@ -155,7 +138,7 @@ export default function ChoosePlanPage() {
         {/* Skip link */}
         <div className="text-center">
           <button
-            onClick={handleStartTrial}
+            onClick={() => handleSelectPlan('free')}
             disabled={loading}
             className="text-sm text-muted-foreground hover:text-foreground underline-offset-4 hover:underline transition-colors"
           >

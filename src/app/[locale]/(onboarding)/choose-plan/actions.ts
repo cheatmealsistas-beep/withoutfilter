@@ -21,7 +21,11 @@ function createAdminClient() {
 /**
  * Start a 90-day trial for the user
  */
-export async function startTrialAction(): Promise<{ success: boolean; error: string | null }> {
+export async function startTrialAction(): Promise<{
+  success: boolean;
+  slug?: string;
+  error: string | null;
+}> {
   const user = await getUser();
 
   if (!user) {
@@ -47,6 +51,16 @@ export async function startTrialAction(): Promise<{ success: boolean; error: str
     return { success: false, error: profileError.message };
   }
 
+  // Get user's organization slug
+  const { data: org } = await supabase
+    .from('organizations')
+    .select('slug')
+    .eq('created_by', user.id)
+    .eq('is_personal', false)
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
   revalidatePath('/dashboard');
-  return { success: true, error: null };
+  return { success: true, slug: org?.slug || undefined, error: null };
 }
