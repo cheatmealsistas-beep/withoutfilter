@@ -1,11 +1,11 @@
 import { redirect, notFound } from 'next/navigation';
 import { getUser } from '@/shared/auth';
 import {
-  isOwnerOfOrganization,
+  getPageBuilderContent,
   getOrganizationBySlug,
-  getHomeContent,
-} from '@/features/owner-dashboard';
-import { HomeEditor } from '@/features/owner-dashboard/components/home-editor';
+  isOwnerOfOrganization,
+  PageBuilderEditor,
+} from '@/features/page-builder';
 
 interface CustomizePageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -20,33 +20,29 @@ export default async function CustomizePage({ params }: CustomizePageProps) {
     redirect(`/${locale}/login?redirect=/app/${slug}/admin/customize`);
   }
 
-  // Must be owner of this organization
-  const isOwner = await isOwnerOfOrganization(user.id, slug);
-  if (!isOwner) {
-    notFound();
-  }
-
   // Get organization data
   const { data: org, error: orgError } = await getOrganizationBySlug(slug);
   if (orgError || !org) {
     notFound();
   }
 
-  // Get current home content
-  const { data: homeContent } = await getHomeContent(slug);
+  // Must be owner of this organization
+  const isOwner = await isOwnerOfOrganization(user.id, org.id);
+  if (!isOwner) {
+    notFound();
+  }
 
-  const initialContent = {
-    headline: homeContent?.headline || '',
-    description: homeContent?.description || null,
-    ctaText: homeContent?.ctaText || null,
-  };
+  // Get page builder content (auto-migrates legacy content)
+  const { data: content, error: contentError } = await getPageBuilderContent(slug);
+  if (contentError || !content) {
+    notFound();
+  }
 
   return (
-    <HomeEditor
-      slug={slug}
-      initialContent={initialContent}
-      appName={org.name}
-      logoUrl={org.logoUrl}
+    <PageBuilderEditor
+      organizationId={org.id}
+      organizationSlug={slug}
+      initialContent={content}
       locale={locale}
     />
   );

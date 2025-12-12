@@ -53,7 +53,7 @@ export function EditBar({ slug, locale }: EditBarProps) {
           </Button>
 
           <Button size="sm" asChild>
-            <Link href={`/${locale}/app/${slug}/edit`}>
+            <Link href={`/${locale}/app/${slug}/admin/customize`}>
               <Pencil className="mr-2 h-4 w-4" />
               Editar página
             </Link>

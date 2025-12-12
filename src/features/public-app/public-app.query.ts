@@ -23,13 +23,11 @@ export async function getPublicAppBySlug(
 ): Promise<{ data: PublicApp | null; error: string | null }> {
   const supabase = createAdminClient();
 
-  // First, get the organization
-  // Note: is_personal can be null or false for non-personal orgs
+  // Get the organization by slug
   const { data: org, error } = await supabase
     .from('organizations')
     .select('id, name, slug, logo_url, tagline, primary_color, created_by')
     .eq('slug', slug)
-    .or('is_personal.eq.false,is_personal.is.null')
     .single();
 
   if (error || !org) {
@@ -104,4 +102,49 @@ export async function isAppOwner(
     .single();
 
   return !!data;
+}
+
+/**
+ * Get published page builder content for public display
+ */
+export async function getPublishedPageContent(
+  organizationId: string
+): Promise<{
+  data: {
+    blocks: import('@/features/page-builder/types').PageBlock[];
+    settings: import('@/features/page-builder/types').PageSettings;
+  } | null;
+  error: string | null;
+}> {
+  const supabase = createAdminClient();
+
+  const { data: module, error } = await supabase
+    .from('app_modules')
+    .select('content')
+    .eq('organization_id', organizationId)
+    .eq('type', 'home')
+    .maybeSingle();
+
+  if (error || !module) {
+    return { data: null, error: error?.message ?? null };
+  }
+
+  const content = module.content as Record<string, unknown> | null;
+
+  // Check if it's new page builder format (v2)
+  if (content && content.version === 2) {
+    const pageContent = content as import('@/features/page-builder/types').PageBuilderContent;
+    // Return published content if available, otherwise draft
+    const blocksData = pageContent.published || pageContent.draft;
+    return {
+      data: {
+        blocks: blocksData.blocks,
+        settings: pageContent.settings,
+      },
+      error: null,
+    };
+  }
+
+  // Legacy format - return null (will fall back to old rendering)
+  return { data: null, error: null };
 }
