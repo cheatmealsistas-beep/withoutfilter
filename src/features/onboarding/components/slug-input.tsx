@@ -106,9 +106,9 @@ export function SlugInput({
             disabled={disabled}
             className={cn(
               'rounded-l-none pr-10',
-              status === 'available' && 'border-green-500 focus-visible:ring-green-500',
+              status === 'available' && 'border-green-500 focus-visible:ring-green-500 bg-green-50',
               (status === 'taken' || status === 'invalid') &&
-                'border-destructive focus-visible:ring-destructive'
+                'border-destructive focus-visible:ring-destructive bg-destructive/5'
             )}
             aria-describedby="slug-status"
             aria-invalid={status === 'taken' || status === 'invalid'}
@@ -120,12 +120,16 @@ export function SlugInput({
       </div>
       <div id="slug-status" className="min-h-[20px]">
         {error && (
-          <p className="text-sm text-destructive" role="alert">
+          <p className="text-sm text-destructive font-medium flex items-center gap-1" role="alert">
+            <XCircle className="h-3 w-3" />
             {error}
           </p>
         )}
         {status === 'available' && (
-          <p className="text-sm text-green-600">¡Disponible!</p>
+          <p className="text-sm text-green-600 font-medium flex items-center gap-1">
+            <CheckCircle2 className="h-3 w-3" />
+            ¡Disponible!
+          </p>
         )}
         {status === 'idle' && value.length > 0 && value.length < 3 && (
           <p className="text-sm text-muted-foreground">Mínimo 3 caracteres</p>

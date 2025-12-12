@@ -58,6 +58,11 @@ export async function registerAction(
 
   const result = await handleRegister(email, password, attributionData, locale);
 
+  // If registration successful and email confirmation is disabled, redirect to onboarding
+  if (result.success && !result.messageKey) {
+    redirect(`/${locale}/onboarding`);
+  }
+
   return { ...result, email };
 }
 
