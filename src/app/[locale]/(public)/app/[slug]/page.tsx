@@ -4,9 +4,11 @@ import {
   getPublicAppBySlug,
   getPublicHomeContent,
   getPublishedPageContent,
+  getEnabledModules,
   isAppOwner,
   PublicHero,
   PublicFooter,
+  PublicNavbar,
   EditBar,
   PublicBlocks,
 } from '@/features/public-app';
@@ -48,6 +50,9 @@ export default async function PublicAppPage({ params }: PublicAppPageProps) {
   const user = await getUser();
   const isOwner = user ? await isAppOwner(app.id, user.id) : false;
 
+  // Get enabled modules for navigation
+  const { data: enabledModules } = await getEnabledModules(app.id);
+
   // Try to get new page builder content first
   const { data: pageContent } = await getPublishedPageContent(app.id);
 
@@ -58,8 +63,16 @@ export default async function PublicAppPage({ params }: PublicAppPageProps) {
         {/* Edit bar for owners */}
         {isOwner && <EditBar slug={slug} locale={locale} />}
 
+        {/* Navigation */}
+        <PublicNavbar
+          app={app}
+          enabledModules={enabledModules || []}
+          locale={locale}
+          isOwner={isOwner}
+        />
+
         {/* Main content - render blocks */}
-        <main className={isOwner ? 'pt-14' : ''}>
+        <main className={`flex-1 ${isOwner ? 'pt-14' : ''}`}>
           <PublicBlocks blocks={pageContent.blocks} settings={pageContent.settings} />
         </main>
 
@@ -85,8 +98,16 @@ export default async function PublicAppPage({ params }: PublicAppPageProps) {
       {/* Edit bar for owners */}
       {isOwner && <EditBar slug={slug} locale={locale} />}
 
+      {/* Navigation */}
+      <PublicNavbar
+        app={app}
+        enabledModules={enabledModules || []}
+        locale={locale}
+        isOwner={isOwner}
+      />
+
       {/* Main content */}
-      <main className={isOwner ? 'pt-14' : ''}>
+      <main className={`flex-1 ${isOwner ? 'pt-14' : ''}`}>
         <PublicHero app={app} content={content} />
       </main>
 

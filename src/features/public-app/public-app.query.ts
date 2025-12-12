@@ -148,3 +148,41 @@ export async function getPublishedPageContent(
   // Legacy format - return null (will fall back to old rendering)
   return { data: null, error: null };
 }
+
+/**
+ * Get enabled modules for public navigation
+ */
+export async function getEnabledModules(
+  organizationId: string
+): Promise<{
+  data: Array<{
+    type: string;
+    isEnabled: boolean;
+    isPublic: boolean;
+    displayOrder: number;
+  }> | null;
+  error: string | null;
+}> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from('app_modules')
+    .select('type, is_enabled, is_public, display_order')
+    .eq('organization_id', organizationId)
+    .eq('is_enabled', true)
+    .order('display_order', { ascending: true });
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  return {
+    data: (data || []).map((m) => ({
+      type: m.type,
+      isEnabled: m.is_enabled ?? false,
+      isPublic: m.is_public ?? true,
+      displayOrder: m.display_order ?? 0,
+    })),
+    error: null,
+  };
+}
