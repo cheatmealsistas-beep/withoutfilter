@@ -1,6 +1,6 @@
 import { type NextRequest } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
-import { updateSession } from '@/shared/database/supabase';
+import { updateSession } from '@/shared/database/supabase/middleware';
 import { locales, defaultLocale } from '@/i18n/config';
 
 const intlMiddleware = createIntlMiddleware({
