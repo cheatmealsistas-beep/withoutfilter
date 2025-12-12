@@ -1,0 +1,87 @@
+{
+  "step0": {
+    "title": "Welcome to Modulary!",
+    "subtitle": "Let's create your digital space in less than 2 minutes.",
+    "nameLabel": "What's your name?",
+    "nameHelp": "This name will appear on your public profile.",
+    "namePlaceholder": "Maria Garcia",
+    "continue": "Continue"
+  },
+  "step1": {
+    "title": "What do you do?",
+    "subtitle": "This helps us personalize your experience.",
+    "types": {
+      "coach": {
+        "label": "Coach",
+        "description": "Personal or professional coaching"
+      },
+      "therapist": {
+        "label": "Therapist",
+        "description": "Therapy and emotional wellbeing"
+      },
+      "trainer": {
+        "label": "Trainer",
+        "description": "Online courses and training"
+      },
+      "content_creator": {
+        "label": "Creator",
+        "description": "Digital content and courses"
+      },
+      "mentor": {
+        "label": "Mentor",
+        "description": "Mentoring and consulting"
+      },
+      "other": {
+        "label": "Other",
+        "description": "Other type of professional"
+      }
+    }
+  },
+  "step2": {
+    "title": "Create your first app",
+    "subtitle": "Your app is the space where your clients will access your content.",
+    "appNameLabel": "App name",
+    "appNamePlaceholder": "Coaching with Maria",
+    "slugLabel": "Your URL",
+    "slugHelp": "This will be your unique URL to share with your clients.",
+    "slugPlaceholder": "my-space",
+    "slugAvailable": "Available!",
+    "slugTaken": "This slug is already in use",
+    "slugInvalid": "Only letters, numbers, and hyphens. Cannot start or end with a hyphen.",
+    "slugMinLength": "Minimum 3 characters",
+    "continue": "Continue"
+  },
+  "step3": {
+    "title": "Add your logo",
+    "subtitle": "Give personality to your space. You can add it later.",
+    "upload": "Upload logo",
+    "fileTypes": "PNG, JPG or SVG. Max 2MB.",
+    "continue": "Continue",
+    "skip": "Skip for now"
+  },
+  "step4": {
+    "title": "Your page is almost ready!",
+    "subtitle": "Customize the content of your homepage.",
+    "edit": "Edit",
+    "preview": "Preview",
+    "headlineLabel": "Main headline",
+    "headlinePlaceholder": "Transform your life...",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Tell your clients what you offer...",
+    "ctaLabel": "Button text",
+    "ctaPlaceholder": "Book now",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "complete": "My page is ready!",
+    "completing": "Finishing..."
+  },
+  "navigation": {
+    "back": "Back",
+    "skip": "Skip for now"
+  },
+  "errors": {
+    "notAuthenticated": "Not authenticated",
+    "generic": "An error occurred",
+    "appNotFound": "App not found"
+  }
+}

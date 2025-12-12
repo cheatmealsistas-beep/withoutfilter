@@ -1,0 +1,40 @@
+{
+  "title": "Choose your plan",
+  "subtitle": "Start with a 90-day free trial. No credit card required.",
+  "trial_badge": "90 days free trial",
+  "popular": "Most popular",
+  "free": "Free",
+  "month": "month",
+  "start_free": "Start free trial",
+  "select_plan": "Start trial",
+  "skip_for_now": "Skip for now, I'll decide later",
+  "loading": "Starting...",
+  "trial_started": "Your 90-day trial has started!",
+  "error_generic": "Something went wrong. Please try again.",
+  "plans": {
+    "free": {
+      "name": "Starter",
+      "description": "Perfect to get started and explore the platform"
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "For professionals who need more space and features"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "Everything you need to scale your business"
+    }
+  },
+  "features": {
+    "storage_basic": "500 MB storage",
+    "storage_extended": "5 GB storage",
+    "storage_unlimited": "Unlimited storage",
+    "modules_basic": "Basic modules (Home, About, Contact)",
+    "modules_all": "All modules included",
+    "support_community": "Community support",
+    "support_priority": "Priority email support",
+    "custom_domain": "Custom domain",
+    "ai_creator": "AI Content Creator",
+    "analytics_advanced": "Advanced analytics"
+  }
+}
