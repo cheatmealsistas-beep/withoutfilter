@@ -67,8 +67,8 @@ export function OnboardingWizard({ initialData, locale }: OnboardingWizardProps)
   }, [router, locale]);
 
   const handleComplete = useCallback(() => {
-    // Redirect to pricing after completing onboarding
-    router.push(`/${locale}/pricing`);
+    // Redirect to plan selection after completing onboarding
+    router.push(`/${locale}/choose-plan`);
   }, [router, locale]);
 
   // Get home content based on professional type
