@@ -56,7 +56,7 @@ export async function startTrialAction(): Promise<{
     .from('organizations')
     .select('slug')
     .eq('created_by', user.id)
-    .eq('is_personal', false)
+    .or('is_personal.eq.false,is_personal.is.null')
     .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle();

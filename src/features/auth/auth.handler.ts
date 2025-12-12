@@ -10,7 +10,9 @@ import {
   requestPasswordReset,
   updatePassword,
   resendVerificationEmail,
+  getUserOrganizationSlug,
 } from './auth.command';
+import { getOnboardingState } from '@/features/onboarding/onboarding.query';
 import {
   AuthErrorCode,
   loginSchema,
@@ -27,7 +29,7 @@ import type { AuthState } from './types';
 export async function handleLogin(
   email: string,
   password: string
-): Promise<AuthState> {
+): Promise<AuthState & { organizationSlug?: string; onboardingCompleted?: boolean }> {
   const validationResult = loginSchema.safeParse({ email, password });
 
   if (!validationResult.success) {
@@ -51,9 +53,21 @@ export async function handleLogin(
     await syncAdminRoleFromWhitelist(user.id, user.email);
   }
 
+  // Get user's organization slug and onboarding state for redirect
+  let organizationSlug: string | null = null;
+  let onboardingCompleted = false;
+
+  if (user) {
+    const { data: onboardingState } = await getOnboardingState(user.id);
+    organizationSlug = await getUserOrganizationSlug(user.id);
+    onboardingCompleted = !!(onboardingState?.isCompleted || onboardingState?.isSkipped);
+  }
+
   return {
     success: true,
     messageKey: 'welcomeBack',
+    organizationSlug: organizationSlug || undefined,
+    onboardingCompleted,
   };
 }
 

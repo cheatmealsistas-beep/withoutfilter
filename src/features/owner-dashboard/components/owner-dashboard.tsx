@@ -13,7 +13,7 @@ interface OwnerDashboardProps {
 }
 
 export function OwnerDashboard({ data, locale }: OwnerDashboardProps) {
-  const { organization, stats, trialEndsAt } = data;
+  const { organization, stats } = data;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
@@ -113,47 +113,53 @@ export function OwnerDashboard({ data, locale }: OwnerDashboardProps) {
         {/* Quick Actions */}
         <h2 className="text-xl font-semibold mb-4">Acciones rapidas</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Palette className="h-5 w-5 text-primary" />
+          <Link href={`/${locale}/app/${organization.slug}/admin/customize`}>
+            <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Palette className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-base">Personalizar</CardTitle>
+                    <CardDescription>Edita colores, logo y textos</CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-base">Personalizar</CardTitle>
-                  <CardDescription>Edita colores, logo y textos</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Layers className="h-5 w-5 text-primary" />
+          <Link href={`/${locale}/app/${organization.slug}/admin/modules`}>
+            <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Layers className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-base">Modulos</CardTitle>
+                    <CardDescription>Activa o desactiva secciones</CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-base">Modulos</CardTitle>
-                  <CardDescription>Activa o desactiva secciones</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
+              </CardHeader>
+            </Card>
+          </Link>
 
-          <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Settings className="h-5 w-5 text-primary" />
+          <Link href={`/${locale}/app/${organization.slug}/admin/settings`}>
+            <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Settings className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-base">Configuracion</CardTitle>
+                    <CardDescription>Dominio, SEO y mas</CardDescription>
+                  </div>
                 </div>
-                <div>
-                  <CardTitle className="text-base">Configuracion</CardTitle>
-                  <CardDescription>Dominio, SEO y mas</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
+              </CardHeader>
+            </Card>
+          </Link>
         </div>
       </main>
     </div>

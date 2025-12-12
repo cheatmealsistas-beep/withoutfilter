@@ -41,7 +41,19 @@ export async function loginAction(
   const result = await handleLogin(email, password);
 
   if (result.success) {
-    redirect(`/${locale}/dashboard`);
+    // Check if onboarding is completed
+    if (result.onboardingCompleted) {
+      // Redirect to owner admin if user has an organization
+      if (result.organizationSlug) {
+        redirect(`/${locale}/app/${result.organizationSlug}/admin`);
+      } else {
+        // Onboarding complete but no org, go to pricing
+        redirect(`/${locale}/choose-plan`);
+      }
+    } else {
+      // Onboarding not complete, go to onboarding
+      redirect(`/${locale}/onboarding`);
+    }
   }
 
   return { ...result, email };
