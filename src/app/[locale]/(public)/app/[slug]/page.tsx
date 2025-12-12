@@ -3,10 +3,12 @@ import { getUser } from '@/shared/auth';
 import {
   getPublicAppBySlug,
   getPublicHomeContent,
+  getPublishedPageContent,
   isAppOwner,
   PublicHero,
   PublicFooter,
   EditBar,
+  PublicBlocks,
 } from '@/features/public-app';
 
 interface PublicAppPageProps {
@@ -42,12 +44,33 @@ export default async function PublicAppPage({ params }: PublicAppPageProps) {
     notFound();
   }
 
-  // Get home content
-  const { data: homeContent } = await getPublicHomeContent(app.id);
-
   // Check if current user is owner
   const user = await getUser();
   const isOwner = user ? await isAppOwner(app.id, user.id) : false;
+
+  // Try to get new page builder content first
+  const { data: pageContent } = await getPublishedPageContent(app.id);
+
+  // If we have page builder content (v2), render blocks
+  if (pageContent && pageContent.blocks.length > 0) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        {/* Edit bar for owners */}
+        {isOwner && <EditBar slug={slug} locale={locale} />}
+
+        {/* Main content - render blocks */}
+        <main className={isOwner ? 'pt-14' : ''}>
+          <PublicBlocks blocks={pageContent.blocks} settings={pageContent.settings} />
+        </main>
+
+        {/* Footer */}
+        <PublicFooter app={app} />
+      </div>
+    );
+  }
+
+  // Fall back to legacy content (for users who haven't migrated)
+  const { data: homeContent } = await getPublicHomeContent(app.id);
 
   // Default content if none exists
   const content = homeContent || {
