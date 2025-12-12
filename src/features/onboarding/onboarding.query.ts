@@ -89,7 +89,7 @@ export async function getUserFirstApp(userId: string): Promise<{
     .from('organizations')
     .select('id, name, slug, logo_url')
     .eq('created_by', userId)
-    .eq('is_personal', false)
+    .or('is_personal.eq.false,is_personal.is.null')
     .order('created_at', { ascending: true })
     .limit(1)
     .maybeSingle();

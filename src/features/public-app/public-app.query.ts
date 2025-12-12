@@ -23,36 +23,29 @@ export async function getPublicAppBySlug(
 ): Promise<{ data: PublicApp | null; error: string | null }> {
   const supabase = createAdminClient();
 
+  // First, get the organization
+  // Note: is_personal can be null or false for non-personal orgs
   const { data: org, error } = await supabase
     .from('organizations')
-    .select(`
-      id,
-      name,
-      slug,
-      logo_url,
-      tagline,
-      primary_color,
-      created_by,
-      profiles!organizations_created_by_fkey (
-        full_name,
-        avatar_url,
-        professional_type
-      )
-    `)
+    .select('id, name, slug, logo_url, tagline, primary_color, created_by')
     .eq('slug', slug)
-    .eq('is_personal', false)
+    .or('is_personal.eq.false,is_personal.is.null')
     .single();
 
   if (error || !org) {
     return { data: null, error: error?.message ?? 'App not found' };
   }
 
-  // Type assertion for the joined profile
-  const profile = org.profiles as unknown as {
-    full_name: string | null;
-    avatar_url: string | null;
-    professional_type: string | null;
-  } | null;
+  // Get owner's profile separately
+  let profile: { full_name: string | null; avatar_url: string | null; professional_type: string | null } | null = null;
+  if (org.created_by) {
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('full_name, avatar_url, professional_type')
+      .eq('id', org.created_by)
+      .single();
+    profile = profileData;
+  }
 
   const publicApp: PublicApp = {
     id: org.id,
@@ -77,13 +70,13 @@ export async function getPublicHomeContent(
 ): Promise<{ data: HomeContent | null; error: string | null }> {
   const supabase = createAdminClient();
 
+  // Get home module content
   const { data: module, error } = await supabase
     .from('app_modules')
     .select('content')
     .eq('organization_id', organizationId)
     .eq('type', 'home')
-    .eq('is_enabled', true)
-    .single();
+    .maybeSingle();
 
   if (error || !module) {
     return { data: null, error: error?.message ?? null };

@@ -19,13 +19,19 @@ export default async function OnboardingPage({ params }: OnboardingPageProps) {
 
   // Get onboarding state
   const { data: state } = await getOnboardingState(user.id);
+  const onboardingCompleted = !!(state?.isCompleted || state?.isSkipped);
 
-  // If already completed or skipped, redirect to dashboard
-  if (state?.isCompleted || state?.isSkipped) {
-    redirect(`/${locale}/dashboard`);
+  // If onboarding is completed, redirect to appropriate destination
+  if (onboardingCompleted) {
+    const { data: app } = await getUserFirstApp(user.id);
+    if (app?.slug) {
+      redirect(`/${locale}/app/${app.slug}/admin`);
+    } else {
+      redirect(`/${locale}/choose-plan`);
+    }
   }
 
-  // Get user's first app if exists (for step 3 and 4)
+  // Get user's app if exists (for steps 3 and 4)
   const { data: app } = await getUserFirstApp(user.id);
 
   // Get home content if app exists

@@ -151,13 +151,36 @@ export async function saveStep4(
 ): Promise<{ success: boolean; error: string | null }> {
   const supabase = createAdminClient();
 
-  const { error } = await supabase
+  // Use upsert to ensure the module exists
+  const { data: existingModule } = await supabase
     .from('app_modules')
-    .update({ content })
+    .select('id')
     .eq('organization_id', organizationId)
-    .eq('type', 'home');
+    .eq('type', 'home')
+    .maybeSingle();
 
-  return { success: !error, error: error?.message ?? null };
+  if (existingModule) {
+    const { error } = await supabase
+      .from('app_modules')
+      .update({ content })
+      .eq('id', existingModule.id);
+
+    return { success: !error, error: error?.message ?? null };
+  } else {
+    // Create if doesn't exist
+    const { error } = await supabase
+      .from('app_modules')
+      .insert({
+        organization_id: organizationId,
+        type: 'home',
+        is_enabled: true,
+        is_public: true,
+        display_order: 0,
+        content,
+      });
+
+    return { success: !error, error: error?.message ?? null };
+  }
 }
 
 /**
@@ -169,13 +192,37 @@ export async function setDefaultHomeContent(
 ): Promise<{ success: boolean; error: string | null }> {
   const supabase = createAdminClient();
 
-  const { error } = await supabase
+  // First check if the home module exists (created by trigger)
+  const { data: existingModule } = await supabase
     .from('app_modules')
-    .update({ content })
+    .select('id')
     .eq('organization_id', organizationId)
-    .eq('type', 'home');
+    .eq('type', 'home')
+    .maybeSingle();
 
-  return { success: !error, error: error?.message ?? null };
+  if (existingModule) {
+    // Update existing module
+    const { error } = await supabase
+      .from('app_modules')
+      .update({ content })
+      .eq('id', existingModule.id);
+
+    return { success: !error, error: error?.message ?? null };
+  } else {
+    // Create the module if it doesn't exist (fallback if trigger didn't run)
+    const { error } = await supabase
+      .from('app_modules')
+      .insert({
+        organization_id: organizationId,
+        type: 'home',
+        is_enabled: true,
+        is_public: true,
+        display_order: 0,
+        content,
+      });
+
+    return { success: !error, error: error?.message ?? null };
+  }
 }
 
 /**

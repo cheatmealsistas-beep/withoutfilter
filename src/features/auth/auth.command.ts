@@ -170,3 +170,21 @@ export async function resendVerificationEmail(email: string) {
 
   return { success: true, error: null };
 }
+
+/**
+ * Get user's first organization slug (for redirect after login)
+ */
+export async function getUserOrganizationSlug(userId: string): Promise<string | null> {
+  const supabase = await createClientServer();
+
+  const { data } = await supabase
+    .from('organizations')
+    .select('slug')
+    .eq('created_by', userId)
+    .or('is_personal.eq.false,is_personal.is.null')
+    .order('created_at', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  return data?.slug || null;
+}

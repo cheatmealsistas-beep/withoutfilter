@@ -39,7 +39,7 @@ export async function getOrganizationBySlug(slug: string): Promise<{
     .from('organizations')
     .select('id, name, slug, logo_url, created_by')
     .eq('slug', slug)
-    .eq('is_personal', false)
+    .or('is_personal.eq.false,is_personal.is.null')
     .maybeSingle();
 
   if (error) {
@@ -75,7 +75,7 @@ export async function getOwnerDashboardData(
     .select('id, name, slug, logo_url, created_by')
     .eq('slug', slug)
     .eq('created_by', userId)
-    .eq('is_personal', false)
+    .or('is_personal.eq.false,is_personal.is.null')
     .maybeSingle();
 
   if (orgError || !org) {
@@ -127,6 +127,72 @@ export async function getOwnerDashboardData(
         displayOrder: m.display_order ?? 0,
       })),
       trialEndsAt: profile?.trial_ends_at || null,
+    },
+    error: null,
+  };
+}
+
+/**
+ * Get home module content for an organization
+ */
+export async function getHomeContent(
+  slug: string
+): Promise<{
+  data: {
+    headline: string;
+    description: string | null;
+    ctaText: string | null;
+  } | null;
+  error: string | null;
+}> {
+  const supabase = await createClientServer();
+
+  // Get organization
+  const { data: org } = await supabase
+    .from('organizations')
+    .select('id')
+    .eq('slug', slug)
+    .or('is_personal.eq.false,is_personal.is.null')
+    .maybeSingle();
+
+  if (!org) {
+    return { data: null, error: 'Organization not found' };
+  }
+
+  // Get home module content
+  const { data: module, error } = await supabase
+    .from('app_modules')
+    .select('content')
+    .eq('organization_id', org.id)
+    .eq('type', 'home')
+    .maybeSingle();
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  if (!module?.content) {
+    return {
+      data: {
+        headline: '',
+        description: null,
+        ctaText: null,
+      },
+      error: null,
+    };
+  }
+
+  const content = module.content as {
+    headline?: string;
+    description?: string | null;
+    ctaText?: string | null;
+  };
+
+  return {
+    data: {
+      headline: content.headline || '',
+      description: content.description || null,
+      ctaText: content.ctaText || null,
     },
     error: null,
   };
