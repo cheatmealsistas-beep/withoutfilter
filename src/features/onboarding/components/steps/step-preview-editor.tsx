@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import confetti from 'canvas-confetti';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
@@ -11,6 +12,35 @@ import { toast } from 'sonner';
 import { Eye, Pencil, Check } from 'lucide-react';
 import type { HomeContent } from '../../types';
 import { cn } from '@/shared/lib/utils';
+
+// Celebration confetti effect
+function triggerCelebration() {
+  const duration = 3000;
+  const end = Date.now() + duration;
+
+  const colors = ['#6366f1', '#8b5cf6', '#d946ef', '#f43f5e', '#f97316'];
+
+  (function frame() {
+    confetti({
+      particleCount: 3,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.8 },
+      colors,
+    });
+    confetti({
+      particleCount: 3,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.8 },
+      colors,
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+}
 
 interface StepPreviewEditorProps {
   defaultContent: HomeContent;
@@ -69,7 +99,10 @@ export function StepPreviewEditor({
       const result = await completeOnboardingAction();
 
       if (result.success) {
-        onComplete();
+        // Trigger celebration!
+        triggerCelebration();
+        // Small delay to enjoy the confetti
+        setTimeout(() => onComplete(), 1500);
       } else {
         toast.error(result.error ?? 'Error al completar');
       }
