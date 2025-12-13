@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ExternalLink, Eye, Clock, Layers, Settings, Palette } from 'lucide-react';
+import { ExternalLink, Eye, Clock, Layers, Settings, Palette, BookOpen } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { Badge } from '@/shared/components/ui/badge';
@@ -155,6 +155,22 @@ export function OwnerDashboard({ data, locale }: OwnerDashboardProps) {
                   <div>
                     <CardTitle className="text-base">Configuracion</CardTitle>
                     <CardDescription>Dominio, SEO y mas</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link href={`/${locale}/app/${organization.slug}/admin/courses`}>
+            <Card className="hover:border-primary/50 transition-colors cursor-pointer h-full">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-base">Contenido</CardTitle>
+                    <CardDescription>Crea y gestiona tu material</CardDescription>
                   </div>
                 </div>
               </CardHeader>
