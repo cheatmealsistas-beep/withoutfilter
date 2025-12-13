@@ -187,33 +187,12 @@ export async function getCourseBySlug(
   // Use admin client to bypass RLS for public page access
   const supabase = createAdminClient();
 
-  console.log('[getCourseBySlug] Query params:', { organizationId, slug });
-
-  // Debug: list all courses for this org to see what slugs exist
-  const { data: allCourses } = await supabase
-    .from('courses')
-    .select('id, slug, title, status, organization_id')
-    .eq('organization_id', organizationId);
-
-  console.log('[getCourseBySlug] All courses for org:', allCourses?.map(c => ({
-    id: c.id,
-    slug: c.slug,
-    title: c.title,
-    status: c.status,
-  })));
-
   const { data, error } = await supabase
     .from('courses')
     .select('*')
     .eq('organization_id', organizationId)
     .eq('slug', slug)
     .single();
-
-  console.log('[getCourseBySlug] Query result:', {
-    found: !!data,
-    error: error?.message,
-    errorCode: error?.code,
-  });
 
   return { data, error: error?.message ?? null };
 }
