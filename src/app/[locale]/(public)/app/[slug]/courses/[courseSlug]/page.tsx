@@ -69,6 +69,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
 
   // Get full course content
   const { data: course } = await getCourseWithContent(courseBasic.id);
+
   if (!course) {
     notFound();
   }

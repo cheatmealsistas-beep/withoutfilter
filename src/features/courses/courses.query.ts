@@ -1,3 +1,4 @@
+import { createClient } from '@supabase/supabase-js';
 import { createClientServer } from '@/shared/database/supabase';
 import type {
   Course,
@@ -9,6 +10,20 @@ import type {
   EnrollmentWithUser,
   EnrollmentWithCourse,
 } from './types';
+
+// Admin client for public queries (bypasses RLS)
+function createAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
+}
 
 // ============================================
 // COURSE QUERIES
@@ -75,6 +90,47 @@ export async function getPublishedCourses(organizationId: string): Promise<{
 }
 
 /**
+ * Get ALL published courses for an organization (public + private)
+ * Used by owners to see all their published content
+ */
+export async function getAllPublishedCourses(organizationId: string): Promise<{
+  data: Course[] | null;
+  error: string | null;
+}> {
+  const supabase = await createClientServer();
+
+  const { data, error } = await supabase
+    .from('courses')
+    .select('*')
+    .eq('organization_id', organizationId)
+    .eq('status', 'published')
+    .order('is_featured', { ascending: false })
+    .order('display_order', { ascending: true });
+
+  return { data, error: error?.message ?? null };
+}
+
+/**
+ * Get ALL courses for an organization (including drafts)
+ * Used by owners to preview their content page
+ */
+export async function getOwnerCourses(organizationId: string): Promise<{
+  data: Course[] | null;
+  error: string | null;
+}> {
+  const supabase = await createClientServer();
+
+  const { data, error } = await supabase
+    .from('courses')
+    .select('*')
+    .eq('organization_id', organizationId)
+    .order('is_featured', { ascending: false })
+    .order('display_order', { ascending: true });
+
+  return { data, error: error?.message ?? null };
+}
+
+/**
  * Get courses accessible to a user (enrolled + public)
  */
 export async function getUserAccessibleCourses(
@@ -119,7 +175,7 @@ export async function getUserAccessibleCourses(
 }
 
 /**
- * Get a single course by slug
+ * Get a single course by slug (uses admin client for public pages)
  */
 export async function getCourseBySlug(
   organizationId: string,
@@ -128,7 +184,8 @@ export async function getCourseBySlug(
   data: Course | null;
   error: string | null;
 }> {
-  const supabase = await createClientServer();
+  // Use admin client to bypass RLS for public page access
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase
     .from('courses')
@@ -155,13 +212,14 @@ export async function getCourseById(courseId: string): Promise<{
 }
 
 /**
- * Get course with all modules and lessons
+ * Get course with all modules and lessons (uses admin client for public pages)
  */
 export async function getCourseWithContent(courseId: string): Promise<{
   data: CourseWithModules | null;
   error: string | null;
 }> {
-  const supabase = await createClientServer();
+  // Use admin client to bypass RLS for public page access
+  const supabase = createAdminClient();
 
   const { data: course, error: courseError } = await supabase
     .from('courses')
