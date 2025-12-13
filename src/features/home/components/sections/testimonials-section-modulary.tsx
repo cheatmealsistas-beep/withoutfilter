@@ -116,7 +116,7 @@ export function TestimonialsSectionModulary({ locale }: TestimonialsSectionModul
 
               {/* Quote */}
               <p className="text-foreground mb-6 leading-relaxed">
-                "{testimonial.quote}"
+                &ldquo;{testimonial.quote}&rdquo;
               </p>
 
               {/* Author */}

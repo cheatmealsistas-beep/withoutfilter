@@ -81,15 +81,15 @@ export async function reorderModules(
   const supabase = createAdminClient();
 
   // Update each module's display order
-  for (const module of modules) {
+  for (const mod of modules) {
     const { error } = await supabase
       .from('app_modules')
       .update({
-        display_order: module.displayOrder,
+        display_order: mod.displayOrder,
         updated_at: new Date().toISOString(),
       })
       .eq('organization_id', organizationId)
-      .eq('type', module.type);
+      .eq('type', mod.type);
 
     if (error) {
       return { success: false, error: error.message };

@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Play,
   Menu,
-  X,
   FileText,
   Video,
   File,
@@ -118,6 +117,7 @@ export function LearningPlayer({
           <div className="aspect-video rounded-lg overflow-hidden bg-black">
             <iframe
               src={embedUrl}
+              title={currentLesson.title}
               className="w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -142,6 +142,7 @@ export function LearningPlayer({
               <>
                 <iframe
                   src={pdfContent.file_url}
+                  title={`PDF: ${currentLesson.title}`}
                   className="w-full h-[600px] rounded-lg border"
                 />
                 <div className="flex justify-center">
@@ -177,6 +178,7 @@ export function LearningPlayer({
           return (
             <iframe
               src={audioContent.embed_url}
+              title={`Audio: ${currentLesson.title}`}
               className="w-full h-[152px] rounded-lg"
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             />
@@ -186,6 +188,7 @@ export function LearningPlayer({
         return (
           <div className="bg-muted rounded-lg p-8 text-center">
             <FileAudio className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+{/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <audio controls className="w-full max-w-md mx-auto">
               <source src={audioContent.file_url} />
               Tu navegador no soporta audio
@@ -236,7 +239,7 @@ export function LearningPlayer({
     }
   };
 
-  const Sidebar = () => (
+  const sidebarContent = (
     <div className="h-full flex flex-col">
       <div className="p-4 border-b">
         <Link href={`/${locale}/app/${orgSlug}/courses/${course.slug}`}>
@@ -256,13 +259,13 @@ export function LearningPlayer({
           {modules
             .filter((m) => (lessonsByModule[m.id]?.length || 0) > 0)
             .sort((a, b) => a.display_order - b.display_order)
-            .map((module) => (
-              <div key={module.id}>
+            .map((mod) => (
+              <div key={mod.id}>
                 <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                  {module.title}
+                  {mod.title}
                 </h3>
                 <div className="space-y-1">
-                  {(lessonsByModule[module.id] || [])
+                  {(lessonsByModule[mod.id] || [])
                     .sort((a, b) => a.display_order - b.display_order)
                     .map((lesson) => (
                       <LessonNavItem
@@ -315,7 +318,7 @@ export function LearningPlayer({
     <div className="min-h-screen flex">
       {/* Desktop Sidebar */}
       <aside className="hidden lg:block w-80 border-r bg-background">
-        <Sidebar />
+        {sidebarContent}
       </aside>
 
       {/* Main Content */}
@@ -332,7 +335,7 @@ export function LearningPlayer({
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="p-0 w-80">
-                  <Sidebar />
+                  {sidebarContent}
                 </SheetContent>
               </Sheet>
 

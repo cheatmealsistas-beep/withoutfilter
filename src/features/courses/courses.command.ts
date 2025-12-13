@@ -314,11 +314,11 @@ export async function reorderModules(
 }> {
   const supabase = await createClientServer();
 
-  for (const module of modules) {
+  for (const mod of modules) {
     const { error } = await supabase
       .from('course_modules')
-      .update({ display_order: module.display_order })
-      .eq('id', module.id);
+      .update({ display_order: mod.display_order })
+      .eq('id', mod.id);
 
     if (error) {
       return { success: false, error: error.message };
