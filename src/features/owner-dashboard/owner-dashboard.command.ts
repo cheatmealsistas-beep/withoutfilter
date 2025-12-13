@@ -1,4 +1,18 @@
-import { createClientServer } from '@/shared/database/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+// Admin client to bypass RLS for module commands
+function createAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
+}
 
 /**
  * Toggle module enabled state
@@ -8,7 +22,7 @@ export async function toggleModule(
   moduleType: string,
   isEnabled: boolean
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { error } = await supabase
     .from('app_modules')
@@ -31,7 +45,7 @@ export async function setModulePublic(
   moduleType: string,
   isPublic: boolean
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { error } = await supabase
     .from('app_modules')
@@ -53,7 +67,7 @@ export async function reorderModules(
   organizationId: string,
   modules: Array<{ type: string; displayOrder: number }>
 ): Promise<{ success: boolean; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   // Update each module's display order
   for (const module of modules) {

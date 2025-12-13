@@ -17,6 +17,7 @@ export {
   getPublicHomeContent,
   isAppOwner,
   getPublishedPageContent,
+  getPublishedModulePageContent,
   getEnabledModules,
 } from './public-app.query';
 

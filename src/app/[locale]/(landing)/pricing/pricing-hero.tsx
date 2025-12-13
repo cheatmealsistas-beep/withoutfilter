@@ -1,34 +1,44 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { AnimatedShinyText } from '@/shared/components/magic-ui';
-import { cn } from '@/shared/lib/utils';
+import { Badge } from '@/shared/components/ui/badge';
+import { Shield, Clock, CreditCard, Zap } from 'lucide-react';
 
 export function PricingHero() {
   const t = useTranslations('pricing');
 
+  const trustIndicators = [
+    { icon: Shield, key: 'secure' },
+    { icon: Clock, key: 'cancel' },
+    { icon: CreditCard, key: 'noCommitment' },
+    { icon: Zap, key: 'instant' }
+  ];
+
   return (
     <div className="text-center mb-12">
-      <div className="mb-6 flex justify-center">
-        <div
-          className={cn(
-            'group rounded-full border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800'
-          )}
-        >
-          <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
-            <span>{t('badge')}</span>
-            <ArrowRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
-          </AnimatedShinyText>
-        </div>
-      </div>
+      <Badge
+        variant="secondary"
+        className="mb-6 rounded-full px-4 py-1.5 bg-primary/10 text-primary border-0"
+      >
+        {t('badge')}
+      </Badge>
 
-      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-4">
+      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
         {t('title')}
       </h1>
-      <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+      <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
         {t('description')}
       </p>
+
+      {/* Trust indicators */}
+      <div className="flex flex-wrap justify-center gap-6">
+        {trustIndicators.map((indicator) => (
+          <div key={indicator.key} className="flex items-center gap-2 text-sm text-muted-foreground">
+            <indicator.icon className="h-4 w-4 text-primary" />
+            <span>{t(`trust.${indicator.key}`)}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

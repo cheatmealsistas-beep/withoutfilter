@@ -1,5 +1,19 @@
 {
-  "badge": "New pricing available",
-  "title": "Choose your plan",
-  "description": "Start building with our powerful AI tools. Upgrade anytime as your needs grow."
+  "badge": "14-day free trial",
+  "title": "Simple, Transparent Pricing",
+  "description": "Start free, scale as you grow. No hidden fees, no surprises. Cancel anytime.",
+  "stats": {
+    "users": "Active Professionals",
+    "uptime": "Uptime",
+    "countries": "Countries",
+    "support": "Support"
+  },
+  "guarantee": "30-day money-back guarantee",
+  "noAccount": "You'll need to create an account or sign in during checkout.",
+  "trust": {
+    "secure": "Secure payment with Stripe",
+    "cancel": "Cancel anytime",
+    "noCommitment": "No commitments",
+    "instant": "Instant access"
+  }
 }

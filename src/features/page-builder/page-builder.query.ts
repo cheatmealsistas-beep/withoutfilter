@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { migrateContent, isPageBuilderContent } from './lib/content-migration';
 import type { PageBuilderContent, PageBlock } from './types';
+import { isEditableModule, getDefaultModuleContent, type EditableModuleType } from './module-config';
 
 // Admin client for bypassing RLS
 function createAdminClient() {
@@ -155,4 +156,150 @@ export async function isOwnerOfOrganization(
     .maybeSingle();
 
   return !!data;
+}
+
+/**
+ * Get module content for any module type (generic version)
+ * For new modules, inherits colors from the 'home' module if configured
+ */
+export async function getModuleContent(
+  slug: string,
+  moduleType: string
+): Promise<{ data: PageBuilderContent | null; error: string | null }> {
+  // Validate module type
+  if (!isEditableModule(moduleType)) {
+    return { data: null, error: `Module type '${moduleType}' is not editable` };
+  }
+
+  const supabase = createAdminClient();
+
+  // Get organization
+  const { data: org, error: orgError } = await supabase
+    .from('organizations')
+    .select('id, primary_color')
+    .eq('slug', slug)
+    .single();
+
+  if (orgError || !org) {
+    return { data: null, error: orgError?.message ?? 'Organization not found' };
+  }
+
+  // Get the module content
+  const { data: module, error: moduleError } = await supabase
+    .from('app_modules')
+    .select('content')
+    .eq('organization_id', org.id)
+    .eq('type', moduleType)
+    .maybeSingle();
+
+  if (moduleError) {
+    return { data: null, error: moduleError.message };
+  }
+
+  const content = module?.content;
+
+  // Helper to get colors from home module (fallback for new modules)
+  const getHomeColors = async (): Promise<{ primaryColor: string; secondaryColor: string }> => {
+    const defaultColors = {
+      primaryColor: org.primary_color || '#6366f1',
+      secondaryColor: '#ffffff',
+    };
+
+    // Only fetch home colors for non-home modules
+    if (moduleType === 'home') {
+      return defaultColors;
+    }
+
+    const { data: homeModule } = await supabase
+      .from('app_modules')
+      .select('content')
+      .eq('organization_id', org.id)
+      .eq('type', 'home')
+      .maybeSingle();
+
+    if (homeModule?.content && isPageBuilderContent(homeModule.content)) {
+      return {
+        primaryColor: homeModule.content.settings.primaryColor || defaultColors.primaryColor,
+        secondaryColor: homeModule.content.settings.secondaryColor || defaultColors.secondaryColor,
+      };
+    }
+
+    return defaultColors;
+  };
+
+  // If no content exists, return module-specific defaults with inherited colors
+  if (!content || Object.keys(content).length === 0) {
+    const defaultContent = getDefaultModuleContent(moduleType as EditableModuleType);
+    const colors = await getHomeColors();
+    defaultContent.settings.primaryColor = colors.primaryColor;
+    defaultContent.settings.secondaryColor = colors.secondaryColor;
+    return { data: defaultContent, error: null };
+  }
+
+  // If already in new format, return as-is
+  if (isPageBuilderContent(content)) {
+    return { data: content, error: null };
+  }
+
+  // For legacy content (only applies to 'home' module)
+  if (moduleType === 'home') {
+    const migrated = migrateContent(content, {
+      primaryColor: org.primary_color || '#6366f1',
+    });
+    return { data: migrated, error: null };
+  }
+
+  // For other modules with non-standard content, return defaults with inherited colors
+  const defaultContent = getDefaultModuleContent(moduleType as EditableModuleType);
+  const colors = await getHomeColors();
+  defaultContent.settings.primaryColor = colors.primaryColor;
+  defaultContent.settings.secondaryColor = colors.secondaryColor;
+  return { data: defaultContent, error: null };
+}
+
+/**
+ * Get published module content for public display
+ */
+export async function getPublishedModuleContent(
+  organizationId: string,
+  moduleType: string
+): Promise<{
+  data: {
+    blocks: PageBlock[];
+    settings: { primaryColor: string; secondaryColor: string };
+  } | null;
+  error: string | null;
+}> {
+  const supabase = createAdminClient();
+
+  const { data: module, error } = await supabase
+    .from('app_modules')
+    .select('content')
+    .eq('organization_id', organizationId)
+    .eq('type', moduleType)
+    .maybeSingle();
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  if (!module?.content) {
+    return { data: null, error: null };
+  }
+
+  const content = module.content;
+
+  if (isPageBuilderContent(content)) {
+    // Return published content, or draft as fallback
+    const blocksData = content.published || content.draft;
+    return {
+      data: {
+        blocks: blocksData.blocks,
+        settings: content.settings,
+      },
+      error: null,
+    };
+  }
+
+  return { data: null, error: null };
 }

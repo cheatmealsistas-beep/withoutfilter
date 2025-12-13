@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import {
   Home,
@@ -14,11 +16,14 @@ import {
   GripVertical,
   Globe,
   Lock,
+  Pencil,
 } from 'lucide-react';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Switch } from '@/shared/components/ui/switch';
 import { Badge } from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
 import { toggleModuleAction } from '../owner-dashboard.actions';
+import { isEditableModule } from '@/features/page-builder';
 
 // Module configuration with icons and labels
 const moduleConfig: Record<
@@ -94,6 +99,8 @@ interface ModulesListProps {
 }
 
 export function ModulesList({ modules, slug }: ModulesListProps) {
+  const params = useParams();
+  const locale = params.locale as string;
   const [isPending, startTransition] = useTransition();
   const [optimisticModules, setOptimisticModules] = useState(modules);
 
@@ -208,13 +215,31 @@ export function ModulesList({ modules, slug }: ModulesListProps) {
                   </p>
                 </div>
 
-                {/* Toggle switch */}
-                <Switch
-                  checked={module.isEnabled}
-                  onCheckedChange={() => handleToggle(module.type, module.isEnabled)}
-                  disabled={isDisabled}
-                  aria-label={`${module.isEnabled ? 'Desactivar' : 'Activar'} ${config.label}`}
-                />
+                {/* Actions */}
+                <div className="flex items-center gap-2">
+                  {/* Edit button - only for editable modules when enabled */}
+                  {module.isEnabled && isEditableModule(module.type) && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      asChild
+                      className="h-8 px-2"
+                    >
+                      <Link href={`/${locale}/app/${slug}/admin/edit/${module.type}`}>
+                        <Pencil className="h-4 w-4" />
+                        <span className="sr-only">Editar {config.label}</span>
+                      </Link>
+                    </Button>
+                  )}
+
+                  {/* Toggle switch */}
+                  <Switch
+                    checked={module.isEnabled}
+                    onCheckedChange={() => handleToggle(module.type, module.isEnabled)}
+                    disabled={isDisabled}
+                    aria-label={`${module.isEnabled ? 'Desactivar' : 'Activar'} ${config.label}`}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>

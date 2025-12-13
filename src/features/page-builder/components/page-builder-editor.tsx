@@ -21,6 +21,8 @@ interface PageBuilderEditorProps {
   organizationSlug: string;
   initialContent: PageBuilderContent;
   locale: string;
+  moduleType?: string;
+  moduleLabel?: string;
 }
 
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
@@ -30,6 +32,8 @@ export function PageBuilderEditor({
   organizationSlug,
   initialContent,
   locale,
+  moduleType = 'home',
+  moduleLabel = 'Página de inicio',
 }: PageBuilderEditorProps) {
   const [blocks, setBlocks] = useState<PageBlock[]>(initialContent.draft.blocks);
   const [settings, setSettings] = useState<PageSettings>(initialContent.settings);
@@ -47,7 +51,7 @@ export function PageBuilderEditor({
 
     saveTimeoutRef.current = setTimeout(async () => {
       setSaveStatus('saving');
-      const result = await saveDraftAction(organizationSlug, blocks, settings);
+      const result = await saveDraftAction(organizationSlug, blocks, settings, moduleType);
 
       if (result.success) {
         setSaveStatus('saved');
@@ -58,7 +62,7 @@ export function PageBuilderEditor({
         toast.error(result.error ?? 'Error al guardar');
       }
     }, 1000);
-  }, [organizationSlug, blocks, settings]);
+  }, [organizationSlug, blocks, settings, moduleType]);
 
   // Trigger save on changes
   useEffect(() => {
@@ -144,12 +148,13 @@ export function PageBuilderEditor({
                 Volver
               </Link>
             </Button>
-            <h1 className="text-lg font-semibold">Personalizar página</h1>
+            <h1 className="text-lg font-semibold">Editar: {moduleLabel}</h1>
           </div>
           <div className="flex items-center gap-4">
             <SaveIndicator status={saveStatus} lastSaved={lastSaved} />
             <PublishButton
               slug={organizationSlug}
+              moduleType={moduleType}
               onSuccess={handlePublishSuccess}
             />
           </div>

@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { AboutHero } from './about-hero';
+import { AboutProblem } from './about-problem';
 import { AboutMission } from './about-mission';
 import { AboutTeam } from './about-team';
 import { AboutCTA } from './about-cta';
@@ -22,6 +23,7 @@ export default function AboutPage() {
   return (
     <>
       <AboutHero />
+      <AboutProblem />
       <AboutMission />
       <AboutTeam />
       <AboutCTA />

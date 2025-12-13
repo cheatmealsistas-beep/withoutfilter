@@ -8,8 +8,10 @@ import {
   UseCasesSectionModulary,
   ModulesSectionModulary,
   HowItWorksSectionModulary,
+  TestimonialsSectionModulary,
   PricingSectionModulary,
   FAQSectionModulary,
+  CTASectionModulary,
   modularityContent
 } from '@/features/home/index-modulary';
 
@@ -99,6 +101,9 @@ export default async function ModularyHomePage() {
         />
       )}
 
+      {/* Testimonials Section */}
+      <TestimonialsSectionModulary locale={locale} />
+
       {/* Pricing Section */}
       {modularityContent.pricing.enabled && (
         <PricingSectionModulary
@@ -114,6 +119,9 @@ export default async function ModularyHomePage() {
           locale={locale}
         />
       )}
+
+      {/* Final CTA Section */}
+      <CTASectionModulary locale={locale} />
     </>
   );
 }

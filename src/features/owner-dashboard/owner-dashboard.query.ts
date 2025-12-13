@@ -1,5 +1,19 @@
-import { createClientServer } from '@/shared/database/supabase';
+import { createClient } from '@supabase/supabase-js';
 import type { OwnerDashboardData } from './types';
+
+// Admin client to bypass RLS for owner dashboard queries
+function createAdminClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
+}
 
 /**
  * Check if user is owner of an organization by slug
@@ -8,7 +22,7 @@ export async function isOwnerOfOrganization(
   userId: string,
   slug: string
 ): Promise<boolean> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { data } = await supabase
     .from('organizations')
@@ -33,7 +47,7 @@ export async function getOrganizationBySlug(slug: string): Promise<{
   } | null;
   error: string | null;
 }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   const { data, error } = await supabase
     .from('organizations')
@@ -67,7 +81,7 @@ export async function getOwnerDashboardData(
   userId: string,
   slug: string
 ): Promise<{ data: OwnerDashboardData | null; error: string | null }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   // Get organization
   const { data: org, error: orgError } = await supabase
@@ -146,7 +160,7 @@ export async function getHomeContent(
   } | null;
   error: string | null;
 }> {
-  const supabase = await createClientServer();
+  const supabase = createAdminClient();
 
   // Get organization
   const { data: org } = await supabase

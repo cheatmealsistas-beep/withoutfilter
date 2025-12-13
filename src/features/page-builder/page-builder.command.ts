@@ -21,7 +21,8 @@ function createAdminClient() {
 export async function saveDraft(
   organizationId: string,
   blocks: PageBlock[],
-  settings: PageSettings
+  settings: PageSettings,
+  moduleType: string = 'home'
 ): Promise<{ success: boolean; error?: string }> {
   const supabase = createAdminClient();
 
@@ -30,7 +31,7 @@ export async function saveDraft(
     .from('app_modules')
     .select('content')
     .eq('organization_id', organizationId)
-    .eq('type', 'home')
+    .eq('type', moduleType)
     .maybeSingle();
 
   const currentContent = module?.content as PageBuilderContent | null;
@@ -51,7 +52,7 @@ export async function saveDraft(
     .from('app_modules')
     .update({ content: newContent })
     .eq('organization_id', organizationId)
-    .eq('type', 'home');
+    .eq('type', moduleType);
 
   if (error) {
     return { success: false, error: error.message };
@@ -64,7 +65,8 @@ export async function saveDraft(
  * Publish current draft
  */
 export async function publishDraft(
-  organizationId: string
+  organizationId: string,
+  moduleType: string = 'home'
 ): Promise<{ success: boolean; error?: string }> {
   const supabase = createAdminClient();
 
@@ -73,7 +75,7 @@ export async function publishDraft(
     .from('app_modules')
     .select('content')
     .eq('organization_id', organizationId)
-    .eq('type', 'home')
+    .eq('type', moduleType)
     .single();
 
   if (fetchError || !module) {
@@ -100,7 +102,7 @@ export async function publishDraft(
     .from('app_modules')
     .update({ content: newContent })
     .eq('organization_id', organizationId)
-    .eq('type', 'home');
+    .eq('type', moduleType);
 
   if (error) {
     return { success: false, error: error.message };

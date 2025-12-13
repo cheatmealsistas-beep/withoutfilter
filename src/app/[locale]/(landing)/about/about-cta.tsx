@@ -2,38 +2,78 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Users, Clock, Sparkles } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
-import { FadeIn, BorderBeam } from '@/shared/components/magic-ui';
 
 export function AboutCTA() {
   const t = useTranslations('about.cta');
 
   return (
-    <section className="container mx-auto px-4 py-24">
-      <FadeIn>
-        <div className="relative rounded-3xl border bg-gradient-to-b from-card to-card/50 p-12 md:p-16 text-center overflow-hidden">
-          <BorderBeam size={400} duration={25} colorFrom="#9c40ff" colorTo="#ffaa40" />
+    <section className="relative py-24 md:py-32 overflow-hidden">
+      {/* Gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10" />
 
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
+      {/* Decorative orbs */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4 pointer-events-none" />
+
+      <div className="container relative mx-auto px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
             {t('title')}
           </h2>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-8">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
             {t('description')}
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" className="px-8" asChild>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+            <Button
+              asChild
+              size="lg"
+              className="h-14 px-8 text-base rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+            >
               <Link href="/register">
                 {t('primaryButton')}
-                <ArrowRight className="ml-2 size-4" />
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="px-8" asChild>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-14 px-8 text-base rounded-xl border-2 bg-background/50 backdrop-blur-sm hover:bg-background/80"
+            >
               <Link href="/pricing">{t('secondaryButton')}</Link>
             </Button>
           </div>
+
+          {/* Mini stats */}
+          <div className="grid grid-cols-3 gap-8 max-w-md mx-auto">
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-background/50 backdrop-blur-sm mb-2">
+                <Users className="h-5 w-5 text-primary" />
+              </div>
+              <div className="text-xl font-bold text-foreground">1,000+</div>
+              <div className="text-xs text-muted-foreground">Users</div>
+            </div>
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-background/50 backdrop-blur-sm mb-2">
+                <Clock className="h-5 w-5 text-primary" />
+              </div>
+              <div className="text-xl font-bold text-foreground">10 min</div>
+              <div className="text-xs text-muted-foreground">Setup</div>
+            </div>
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-background/50 backdrop-blur-sm mb-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+              </div>
+              <div className="text-xl font-bold text-foreground">0</div>
+              <div className="text-xs text-muted-foreground">Code</div>
+            </div>
+          </div>
         </div>
-      </FadeIn>
+      </div>
     </section>
   );
 }

@@ -11,6 +11,7 @@ import {
   getOrganizationBySlug,
   isOwnerOfOrganization,
   getPageBuilderContent,
+  getModuleContent,
 } from './page-builder.query';
 import { saveDraft, publishDraft } from './page-builder.command';
 
@@ -37,7 +38,8 @@ export async function handleSaveDraft(
   userId: string,
   slug: string,
   blocks: PageBlock[],
-  settings: PageSettings
+  settings: PageSettings,
+  moduleType: string = 'home'
 ): Promise<ActionResult> {
   // Get organization
   const { data: org, error: orgError } = await getOrganizationBySlug(slug);
@@ -70,7 +72,7 @@ export async function handleSaveDraft(
   }));
 
   // Save draft
-  const result = await saveDraft(org.id, orderedBlocks, settingsResult.data);
+  const result = await saveDraft(org.id, orderedBlocks, settingsResult.data, moduleType);
 
   return result;
 }
@@ -80,7 +82,8 @@ export async function handleSaveDraft(
  */
 export async function handlePublish(
   userId: string,
-  slug: string
+  slug: string,
+  moduleType: string = 'home'
 ): Promise<ActionResult> {
   // Get organization
   const { data: org, error: orgError } = await getOrganizationBySlug(slug);
@@ -95,7 +98,7 @@ export async function handlePublish(
   }
 
   // Publish
-  const result = await publishDraft(org.id);
+  const result = await publishDraft(org.id, moduleType);
 
   return result;
 }

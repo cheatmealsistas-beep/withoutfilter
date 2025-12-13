@@ -37,41 +37,95 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
   // Get app data
   const { data: app } = await getPublicAppBySlug(slug);
   if (!app) {
+    console.log('[CourseDetailPage] App not found for slug:', slug);
     notFound();
   }
 
   // Get course
-  const { data: courseBasic } = await getCourseBySlug(app.id, courseSlug);
+  console.log('[CourseDetailPage] Fetching course with:', {
+    orgId: app.id,
+    orgSlug: slug,
+    courseSlug,
+  });
+
+  const { data: courseBasic, error: courseError } = await getCourseBySlug(app.id, courseSlug);
+
+  // Debug log
+  console.log('[CourseDetailPage] Course query result:', {
+    orgId: app.id,
+    courseSlug,
+    found: !!courseBasic,
+    courseId: courseBasic?.id,
+    courseTitle: courseBasic?.title,
+    courseDbSlug: courseBasic?.slug,
+    status: courseBasic?.status,
+    visibility: courseBasic?.visibility,
+    error: courseError,
+  });
 
   // Course not found or not published
+  console.log('[CourseDetailPage] Checking publish status:', {
+    hasData: !!courseBasic,
+    status: courseBasic?.status,
+    isPublished: courseBasic?.status === 'published',
+  });
+
   if (!courseBasic || courseBasic.status !== 'published') {
+    console.log('[CourseDetailPage] REJECTING - Course not found or not published:', {
+      courseSlug,
+      status: courseBasic?.status,
+      condition1: !courseBasic,
+      condition2: courseBasic?.status !== 'published',
+    });
     notFound();
   }
 
+  console.log('[CourseDetailPage] PASSED publish check, continuing...');
+
   // Get user
   const user = await getUser();
+  console.log('[CourseDetailPage] User:', { hasUser: !!user, userId: user?.id });
+
   const isOwner = user ? await isAppOwner(app.id, user.id) : false;
+  console.log('[CourseDetailPage] Is owner:', isOwner);
 
   // Get enabled modules for navigation
   const { data: enabledModules } = await getEnabledModules(app.id);
 
   // Check if course is private and user doesn't have access
+  console.log('[CourseDetailPage] Checking visibility:', {
+    visibility: courseBasic.visibility,
+    isPrivate: courseBasic.visibility === 'private',
+  });
+
   if (courseBasic.visibility === 'private') {
     if (!user) {
+      console.log('[CourseDetailPage] Private course, no user - redirecting to login');
       redirect(`/${locale}/login?redirect=/app/${slug}/courses/${courseSlug}`);
     }
 
     const { data: hasAccess } = await hasActiveEnrollment(courseBasic.id, user.id);
+    console.log('[CourseDetailPage] Private course access check:', { hasAccess });
     if (!hasAccess) {
+      console.log('[CourseDetailPage] REJECTING - No access to private course');
       notFound();
     }
   }
 
   // Get full course content
-  const { data: course } = await getCourseWithContent(courseBasic.id);
+  console.log('[CourseDetailPage] Fetching full course content for id:', courseBasic.id);
+  const { data: course, error: contentError } = await getCourseWithContent(courseBasic.id);
+  console.log('[CourseDetailPage] Course content result:', {
+    hasCourse: !!course,
+    error: contentError,
+  });
+
   if (!course) {
+    console.log('[CourseDetailPage] REJECTING - No course content found');
     notFound();
   }
+
+  console.log('[CourseDetailPage] SUCCESS - Rendering course page');
 
   // Check enrollment status
   let isEnrolled = false;

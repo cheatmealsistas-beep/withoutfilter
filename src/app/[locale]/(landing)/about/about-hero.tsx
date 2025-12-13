@@ -1,34 +1,38 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { FadeIn, AnimatedGradientText } from '@/shared/components/magic-ui';
-import { DotPattern } from '@/shared/components/ui/dot-pattern';
+import { Badge } from '@/shared/components/ui/badge';
 
 export function AboutHero() {
   const t = useTranslations('about');
 
   return (
-    <section className="relative flex flex-col items-center justify-center px-4 py-32 text-center overflow-hidden">
-      <DotPattern className="[mask-image:radial-gradient(500px_circle_at_center,white,transparent)]" />
+    <section className="relative py-24 md:py-32 overflow-hidden">
+      {/* Decorative gradient orbs */}
+      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[400px] h-[400px] bg-accent/10 rounded-full blur-3xl pointer-events-none" />
 
-      <FadeIn>
-        <p className="text-sm font-medium text-primary mb-4 tracking-wider uppercase">
-          {t('hero.label')}
-        </p>
-      </FadeIn>
+      <div className="container relative mx-auto px-4">
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+          <Badge
+            variant="secondary"
+            className="mb-6 rounded-full px-4 py-1.5 bg-primary/10 text-primary border-0"
+          >
+            {t('hero.label')}
+          </Badge>
 
-      <FadeIn delay={0.1}>
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl max-w-3xl">
-          {t('hero.titleStart')}{' '}
-          <AnimatedGradientText>{t('hero.titleHighlight')}</AnimatedGradientText>
-        </h1>
-      </FadeIn>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+            {t('hero.titleStart')}{' '}
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              {t('hero.titleHighlight')}
+            </span>
+          </h1>
 
-      <FadeIn delay={0.2}>
-        <p className="mt-6 text-lg md:text-xl leading-8 text-muted-foreground max-w-2xl">
-          {t('hero.description')}
-        </p>
-      </FadeIn>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+            {t('hero.description')}
+          </p>
+        </div>
+      </div>
     </section>
   );
 }
