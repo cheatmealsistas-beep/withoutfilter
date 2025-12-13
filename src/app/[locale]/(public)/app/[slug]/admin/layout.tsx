@@ -1,15 +1,50 @@
+import { redirect, notFound } from 'next/navigation';
+import { getUser } from '@/shared/auth';
+import {
+  isOwnerOfOrganization,
+  getOrganizationBySlug,
+  getUserOrganizations,
+  OwnerAdminLayout,
+} from '@/features/owner-dashboard';
+
+interface AdminLayoutProps {
+  children: React.ReactNode;
+  params: Promise<{ locale: string; slug: string }>;
+}
+
 /**
  * Owner Admin Layout
  *
- * Resets the brand colors to Modulary defaults for the owner's admin panel.
- * The public-facing pages use the owner's custom brand colors,
- * but the admin panel should use consistent Modulary styling.
+ * Provides consistent sidebar navigation, site selector, and user menu
+ * for all admin pages. Resets brand colors to Modulary defaults.
  */
-export default function OwnerAdminLayout({
+export default async function AdminLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  params,
+}: AdminLayoutProps) {
+  const { locale, slug } = await params;
+  const user = await getUser();
+
+  // Must be authenticated
+  if (!user) {
+    redirect(`/${locale}/login?redirect=/app/${slug}/admin`);
+  }
+
+  // Must be owner of this organization
+  const isOwner = await isOwnerOfOrganization(user.id, slug);
+  if (!isOwner) {
+    notFound();
+  }
+
+  // Get current organization data
+  const { data: currentOrg, error: orgError } = await getOrganizationBySlug(slug);
+  if (orgError || !currentOrg) {
+    notFound();
+  }
+
+  // Get all user organizations for the site selector
+  const { data: organizations } = await getUserOrganizations(user.id);
+
   return (
     <div
       style={
@@ -20,7 +55,17 @@ export default function OwnerAdminLayout({
         } as React.CSSProperties
       }
     >
-      {children}
+      <OwnerAdminLayout
+        currentOrg={currentOrg}
+        organizations={organizations}
+        user={{
+          id: user.id,
+          email: user.email,
+          avatar: user.avatar,
+        }}
+      >
+        {children}
+      </OwnerAdminLayout>
     </div>
   );
 }

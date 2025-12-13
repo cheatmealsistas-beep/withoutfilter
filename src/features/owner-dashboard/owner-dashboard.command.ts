@@ -16,6 +16,7 @@ function createAdminClient() {
 
 /**
  * Toggle module enabled state
+ * Note: When enabling courses, it's also set to public automatically
  */
 export async function toggleModule(
   organizationId: string,
@@ -24,9 +25,19 @@ export async function toggleModule(
 ): Promise<{ success: boolean; error: string | null }> {
   const supabase = createAdminClient();
 
+  // When enabling courses, also make it public
+  const updateData: { is_enabled: boolean; is_public?: boolean; updated_at: string } = {
+    is_enabled: isEnabled,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (moduleType === 'courses' && isEnabled) {
+    updateData.is_public = true;
+  }
+
   const { error } = await supabase
     .from('app_modules')
-    .update({ is_enabled: isEnabled, updated_at: new Date().toISOString() })
+    .update(updateData)
     .eq('organization_id', organizationId)
     .eq('type', moduleType);
 

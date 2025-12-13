@@ -11,7 +11,6 @@ import {
   MessageSquareQuote,
   FileText,
   Mail,
-  BookOpen,
   FolderOpen,
   GripVertical,
   Globe,
@@ -71,12 +70,7 @@ const moduleConfig: Record<
     description: 'Formulario de contacto',
     canDisable: true,
   },
-  courses: {
-    icon: BookOpen,
-    label: 'Cursos',
-    description: 'Contenido educativo y formación',
-    canDisable: true,
-  },
+  // courses: Se gestiona en su propia sección del menú
   resources: {
     icon: FolderOpen,
     label: 'Recursos',
@@ -104,10 +98,10 @@ export function ModulesList({ modules, slug }: ModulesListProps) {
   const [isPending, startTransition] = useTransition();
   const [optimisticModules, setOptimisticModules] = useState(modules);
 
-  // Sort modules by display order
-  const sortedModules = [...optimisticModules].sort(
-    (a, b) => a.displayOrder - b.displayOrder
-  );
+  // Sort modules by display order and filter out courses (has its own section)
+  const sortedModules = [...optimisticModules]
+    .filter((m) => m.type !== 'courses')
+    .sort((a, b) => a.displayOrder - b.displayOrder);
 
   const handleToggle = (moduleType: string, currentEnabled: boolean) => {
     const config = moduleConfig[moduleType];

@@ -6,7 +6,8 @@ interface UploadResult {
 }
 
 /**
- * Upload organization logo to Supabase Storage
+ * Upload organization logo to Supabase Storage via server action
+ * This function converts the file to base64 and sends it to a server action
  * @param organizationId - The organization ID
  * @param file - The file to upload
  * @returns The public URL of the uploaded file
@@ -15,32 +16,38 @@ export async function uploadOrganizationLogo(
   organizationId: string,
   file: File
 ): Promise<UploadResult> {
-  const supabase = createClient();
+  try {
+    // Convert file to base64 for server transmission
+    const buffer = await file.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString('base64');
 
-  // Generate unique filename
-  const fileExt = file.name.split('.').pop()?.toLowerCase() || 'png';
-  const fileName = `logo.${fileExt}`;
-  const filePath = `${organizationId}/${fileName}`;
+    const fileExt = file.name.split('.').pop()?.toLowerCase() || 'png';
 
-  // Upload file
-  const { error: uploadError } = await supabase.storage
-    .from('organization-logos')
-    .upload(filePath, file, {
-      upsert: true, // Replace existing logo
-      cacheControl: '3600',
+    // Call server action
+    const response = await fetch('/api/upload-logo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        organizationId,
+        fileBase64: base64,
+        fileExt,
+        mimeType: file.type,
+      }),
     });
 
-  if (uploadError) {
-    console.error('Upload error:', uploadError);
-    return { url: null, error: uploadError.message };
+    const result = await response.json();
+
+    if (!response.ok) {
+      return { url: null, error: result.error || 'Error uploading file' };
+    }
+
+    return { url: result.url, error: null };
+  } catch (error) {
+    console.error('Upload error:', error);
+    return { url: null, error: 'Error uploading file' };
   }
-
-  // Get public URL
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from('organization-logos').getPublicUrl(filePath);
-
-  return { url: publicUrl, error: null };
 }
 
 /**

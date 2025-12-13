@@ -148,6 +148,42 @@ export async function getOwnerDashboardData(
 }
 
 /**
+ * Get all organizations owned by a user
+ */
+export async function getUserOrganizations(userId: string): Promise<{
+  data: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    logoUrl: string | null;
+  }>;
+  error: string | null;
+}> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from('organizations')
+    .select('id, name, slug, logo_url')
+    .eq('created_by', userId)
+    .or('is_personal.eq.false,is_personal.is.null')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    return { data: [], error: error.message };
+  }
+
+  return {
+    data: (data || []).map((org) => ({
+      id: org.id,
+      name: org.name,
+      slug: org.slug,
+      logoUrl: org.logo_url,
+    })),
+    error: null,
+  };
+}
+
+/**
  * Get home module content for an organization
  */
 export async function getHomeContent(
