@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 
-import type { AttributionData } from '@/features/attribution';
+import type { AttributionData } from '@/shared/types';
 import {
   handleLogin,
   handleLogout,

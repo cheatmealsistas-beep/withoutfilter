@@ -1,7 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { FadeIn, DotPattern, AnimatedGradientText } from '@/shared/components/magic-ui';
+import { FadeIn, AnimatedGradientText } from '@/shared/components/magic-ui';
+import { DotPattern } from '@/shared/components/ui/dot-pattern';
 
 export function AboutHero() {
   const t = useTranslations('about');

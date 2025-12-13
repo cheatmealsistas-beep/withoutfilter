@@ -1,6 +1,6 @@
 'use client';
 
-import type { PageBlock, PageSettings } from '@/features/page-builder/types';
+import type { PageBlock, PageSettings } from '@/shared/types/page-blocks';
 import {
   HeroBlock,
   ServicesBlock,

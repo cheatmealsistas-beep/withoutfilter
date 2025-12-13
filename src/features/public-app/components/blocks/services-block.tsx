@@ -1,7 +1,7 @@
 'use client';
 
 import { Sparkles, Zap, Heart, Star, Shield, Target, Rocket, Users, type LucideIcon } from 'lucide-react';
-import type { ServicesContent } from '@/features/page-builder/types';
+import type { ServicesContent } from '@/shared/types/page-blocks';
 
 interface ServicesBlockProps {
   content: ServicesContent;

@@ -1,5 +1,5 @@
 import { createError, fromZodError } from '@/shared/errors';
-import type { AttributionData } from '@/features/attribution';
+import type { AttributionData } from '@/shared/types';
 import { syncAdminRoleFromWhitelist } from '@/shared/auth/roles';
 
 import {

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { AttributionData } from '@/features/attribution';
+import type { AttributionData } from '@/shared/types';
 
 // Subscription status enum matching Stripe
 export const subscriptionStatusSchema = z.enum([

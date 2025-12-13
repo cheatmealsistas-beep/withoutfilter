@@ -1,0 +1,39 @@
+{
+  "header": {
+    "adminPanel": "Admin Panel",
+    "viewSite": "View my site"
+  },
+  "trial": {
+    "daysRemaining": "You have {days} days left of your free trial",
+    "afterTrial": "After that, choose a plan to continue",
+    "viewPlans": "View plans"
+  },
+  "stats": {
+    "totalViews": "Total views",
+    "comingSoon": "Analytics coming soon",
+    "activeModules": "Active modules",
+    "sectionsDescription": "Sections of your site",
+    "status": "Status",
+    "trial": "Trial",
+    "active": "Active"
+  },
+  "quickActions": {
+    "title": "Quick actions",
+    "customize": {
+      "title": "Customize",
+      "description": "Edit colors, logo and texts"
+    },
+    "modules": {
+      "title": "Modules",
+      "description": "Enable or disable sections"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Domain, SEO and more"
+    },
+    "content": {
+      "title": "Content",
+      "description": "Create and manage your material"
+    }
+  }
+}

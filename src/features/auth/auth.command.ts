@@ -1,5 +1,5 @@
 import { createClientServer } from '@/shared/database/supabase';
-import type { AttributionData } from '@/features/attribution';
+import type { AttributionData } from '@/shared/types';
 import type { LoginInput, RegisterInput, MagicLinkInput, ResetPasswordInput, UpdatePasswordInput } from './types';
 import type { OAuthProvider } from '@/shared/auth';
 

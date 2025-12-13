@@ -3,7 +3,7 @@
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/lib/utils';
-import type { CtaContent } from '@/features/page-builder/types';
+import type { CtaContent } from '@/shared/types/page-blocks';
 
 interface CtaBlockProps {
   content: CtaContent;

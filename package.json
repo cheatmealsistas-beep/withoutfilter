@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run i18n:generate-static && next dev",
-    "build": "npm run i18n:generate-static && next build",
+    "build": "next build",
     "prebuild": "npm run i18n:generate-static",
     "build:verbose": "next build",
     "start": "next start",
@@ -81,8 +81,6 @@
     "@stripe/stripe-js": "^8.5.2",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.78.0",
-    "@types/canvas-confetti": "^1.9.0",
-    "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.22",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
@@ -110,8 +108,10 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
     "@typescript-eslint/parser": "^8.47.0",
     "@vitejs/plugin-react": "^5.1.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",

@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { InfoBarSettings } from '@/features/admin/components/info-bar-settings';
+import { InfoBarSettingsPanel } from '@/features/admin/components/info-bar-settings';
 import { getInfoBarSettings } from '@/features/admin/admin.query';
 
 interface AdminSettingsPageProps {
@@ -38,7 +38,7 @@ export default async function AdminSettingsPage({
 
       {/* Info Bar Settings */}
       {infoBarSettings && (
-        <InfoBarSettings initialSettings={infoBarSettings} locale={locale} />
+        <InfoBarSettingsPanel initialSettings={infoBarSettings} locale={locale} />
       )}
     </div>
   );

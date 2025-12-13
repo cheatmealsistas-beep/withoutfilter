@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/shared/components/ui/accordion';
-import type { FaqsContent } from '@/features/page-builder/types';
+import type { FaqsContent } from '@/shared/types/page-blocks';
 
 interface FaqsBlockProps {
   content: FaqsContent;
