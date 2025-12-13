@@ -1,5 +1,19 @@
 {
-  "badge": "Nuevos precios disponibles",
-  "title": "Elige tu plan",
-  "description": "Empieza a construir con nuestras potentes herramientas IA. Actualiza en cualquier momento según crezcan tus necesidades."
+  "badge": "Prueba gratis de 14 días",
+  "title": "Precios Simples y Transparentes",
+  "description": "Empieza gratis, escala a medida que creces. Sin tarifas ocultas, sin sorpresas. Cancela cuando quieras.",
+  "stats": {
+    "users": "Profesionales Activos",
+    "uptime": "Uptime",
+    "countries": "Países",
+    "support": "Soporte"
+  },
+  "guarantee": "Garantía de devolución de 30 días",
+  "noAccount": "Necesitarás crear una cuenta o iniciar sesión durante el checkout.",
+  "trust": {
+    "secure": "Pago seguro con Stripe",
+    "cancel": "Cancela cuando quieras",
+    "noCommitment": "Sin compromisos",
+    "instant": "Acceso inmediato"
+  }
 }

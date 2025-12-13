@@ -8,9 +8,10 @@ import { Pencil, Eye } from 'lucide-react';
 interface EditBarProps {
   slug: string;
   locale: string;
+  moduleType?: string;
 }
 
-export function EditBar({ slug, locale }: EditBarProps) {
+export function EditBar({ slug, locale, moduleType = 'home' }: EditBarProps) {
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   if (isPreviewMode) {
@@ -46,7 +47,10 @@ export function EditBar({ slug, locale }: EditBarProps) {
           </Button>
 
           <Button size="sm" asChild>
-            <Link href={`/${locale}/app/${slug}/admin/customize`}>
+            <Link href={moduleType === 'home'
+              ? `/${locale}/app/${slug}/admin/customize`
+              : `/${locale}/app/${slug}/admin/edit/${moduleType}`
+            }>
               <Pencil className="mr-2 h-4 w-4" />
               Editar página
             </Link>

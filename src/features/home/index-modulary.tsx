@@ -14,6 +14,8 @@ export { ModulesSectionModulary } from './components/sections/modules-section-mo
 export { HowItWorksSectionModulary } from './components/sections/how-it-works-section-modulary';
 export { PricingSectionModulary } from './components/sections/pricing-section-modulary';
 export { FAQSectionModulary } from './components/sections/faq-section-modulary';
+export { TestimonialsSectionModulary } from './components/sections/testimonials-section-modulary';
+export { CTASectionModulary } from './components/sections/cta-section-modulary';
 
 // Content
 export { modularityContent } from './config/modulary-content';

@@ -8,17 +8,18 @@ import { toast } from 'sonner';
 
 interface PublishButtonProps {
   slug: string;
+  moduleType?: string;
   onSuccess?: () => void;
 }
 
-export function PublishButton({ slug, onSuccess }: PublishButtonProps) {
+export function PublishButton({ slug, moduleType = 'home', onSuccess }: PublishButtonProps) {
   const [publishing, setPublishing] = useState(false);
 
   const handlePublish = async () => {
     setPublishing(true);
 
     try {
-      const result = await publishAction(slug);
+      const result = await publishAction(slug, moduleType);
 
       if (result.success) {
         toast.success('Página publicada correctamente');

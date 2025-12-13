@@ -150,6 +150,57 @@ export async function getPublishedPageContent(
 }
 
 /**
+ * Get published content for any module type
+ */
+export async function getPublishedModulePageContent(
+  organizationId: string,
+  moduleType: string
+): Promise<{
+  data: {
+    blocks: import('@/features/page-builder/types').PageBlock[];
+    settings: import('@/features/page-builder/types').PageSettings;
+  } | null;
+  error: string | null;
+}> {
+  const supabase = createAdminClient();
+
+  const { data: module, error } = await supabase
+    .from('app_modules')
+    .select('content, is_enabled')
+    .eq('organization_id', organizationId)
+    .eq('type', moduleType)
+    .maybeSingle();
+
+  if (error || !module) {
+    return { data: null, error: error?.message ?? null };
+  }
+
+  // Module must be enabled
+  if (!module.is_enabled) {
+    return { data: null, error: 'Module not enabled' };
+  }
+
+  const content = module.content as Record<string, unknown> | null;
+
+  // Check if it's new page builder format (v2)
+  if (content && content.version === 2) {
+    const pageContent = content as import('@/features/page-builder/types').PageBuilderContent;
+    // Return published content if available, otherwise draft
+    const blocksData = pageContent.published || pageContent.draft;
+    return {
+      data: {
+        blocks: blocksData.blocks,
+        settings: pageContent.settings,
+      },
+      error: null,
+    };
+  }
+
+  // No content or legacy format
+  return { data: null, error: null };
+}
+
+/**
  * Get enabled modules for public navigation
  */
 export async function getEnabledModules(

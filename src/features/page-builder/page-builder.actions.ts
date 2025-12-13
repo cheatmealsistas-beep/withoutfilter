@@ -17,14 +17,15 @@ import {
 export async function saveDraftAction(
   slug: string,
   blocks: PageBlock[],
-  settings: PageSettings
+  settings: PageSettings,
+  moduleType: string = 'home'
 ): Promise<ActionResult> {
   const user = await getUser();
   if (!user) {
     return { success: false, error: 'No autenticado' };
   }
 
-  const result = await handleSaveDraft(user.id, slug, blocks, settings);
+  const result = await handleSaveDraft(user.id, slug, blocks, settings, moduleType);
 
   // Don't revalidate on auto-save to avoid flicker
   return result;
@@ -33,17 +34,29 @@ export async function saveDraftAction(
 /**
  * Publish draft action
  */
-export async function publishAction(slug: string): Promise<ActionResult> {
+export async function publishAction(
+  slug: string,
+  moduleType: string = 'home'
+): Promise<ActionResult> {
   const user = await getUser();
   if (!user) {
     return { success: false, error: 'No autenticado' };
   }
 
-  const result = await handlePublish(user.id, slug);
+  const result = await handlePublish(user.id, slug, moduleType);
 
   if (result.success) {
-    // Revalidate the public page
-    revalidatePath(`/app/${slug}`);
+    // Revalidate the public pages - need to invalidate all locale variants
+    // Next.js with next-intl requires explicit paths per locale
+    const locales = ['en', 'es'];
+
+    for (const locale of locales) {
+      if (moduleType === 'home') {
+        revalidatePath(`/${locale}/app/${slug}`);
+      } else {
+        revalidatePath(`/${locale}/app/${slug}/${moduleType}`);
+      }
+    }
   }
 
   return result;
