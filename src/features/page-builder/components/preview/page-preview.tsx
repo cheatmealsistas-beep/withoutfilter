@@ -7,6 +7,7 @@ import {
   PricingBlock,
   FaqsBlock,
   CtaBlock,
+  ContentBlock,
 } from '@/features/public-app/components/blocks';
 import type { PageBlock, PageSettings } from '../../types';
 
@@ -71,6 +72,14 @@ export function PagePreview({ blocks, settings }: PagePreviewProps) {
                 content={block.content}
                 primaryColor={settings.primaryColor}
                 secondaryColor={settings.secondaryColor}
+              />
+            );
+          case 'content':
+            return (
+              <ContentBlock
+                key={block.id}
+                content={block.content}
+                primaryColor={settings.primaryColor}
               />
             );
           default:

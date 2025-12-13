@@ -4,3 +4,4 @@ export { TestimonialsBlock } from './testimonials-block';
 export { PricingBlock } from './pricing-block';
 export { FaqsBlock } from './faqs-block';
 export { CtaBlock } from './cta-block';
+export { ContentBlock } from './content-block';

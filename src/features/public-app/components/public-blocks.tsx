@@ -8,6 +8,7 @@ import {
   PricingBlock,
   FaqsBlock,
   CtaBlock,
+  ContentBlock,
 } from './blocks';
 
 interface PublicBlocksProps {
@@ -63,6 +64,14 @@ export function PublicBlocks({ blocks, settings }: PublicBlocksProps) {
                 content={block.content}
                 primaryColor={settings.primaryColor}
                 secondaryColor={settings.secondaryColor}
+              />
+            );
+          case 'content':
+            return (
+              <ContentBlock
+                key={block.id}
+                content={block.content}
+                primaryColor={settings.primaryColor}
               />
             );
           default:

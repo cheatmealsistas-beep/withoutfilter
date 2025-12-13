@@ -7,7 +7,7 @@ import { z } from 'zod';
 // Block Types
 // =============================================================================
 
-export const blockTypes = ['hero', 'services', 'testimonials', 'pricing', 'faqs', 'cta'] as const;
+export const blockTypes = ['hero', 'services', 'testimonials', 'pricing', 'faqs', 'cta', 'content'] as const;
 export type BlockType = (typeof blockTypes)[number];
 
 // Block type labels for UI
@@ -18,6 +18,7 @@ export const blockTypeLabels: Record<BlockType, string> = {
   pricing: 'Precios',
   faqs: 'FAQs',
   cta: 'CTA',
+  content: 'Contenido',
 };
 
 // Block type icons (Lucide icon names)
@@ -28,6 +29,7 @@ export const blockTypeIcons: Record<BlockType, string> = {
   pricing: 'CreditCard',
   faqs: 'HelpCircle',
   cta: 'Megaphone',
+  content: 'FileText',
 };
 
 // =============================================================================
@@ -197,6 +199,31 @@ export type CtaContent = z.infer<typeof ctaContentSchema>;
 export type CtaBlock = z.infer<typeof ctaBlockSchema>;
 
 // =============================================================================
+// Content Block (Text with Image)
+// =============================================================================
+
+export const contentContentSchema = z.object({
+  headline: z.string().max(100),
+  subheadline: z.string().max(200).optional(),
+  body: z.string().max(2000),
+  imageUrl: z.string().optional(),
+  imageAlt: z.string().max(100).optional(),
+  imagePosition: z.enum(['left', 'right']).default('right'),
+  style: z.enum(['default', 'boxed', 'fullwidth']).default('default'),
+});
+
+export const contentBlockSchema = z.object({
+  id: z.string(),
+  type: z.literal('content'),
+  order: z.number().int().min(0),
+  isVisible: z.boolean().default(true),
+  content: contentContentSchema,
+});
+
+export type ContentContent = z.infer<typeof contentContentSchema>;
+export type ContentBlock = z.infer<typeof contentBlockSchema>;
+
+// =============================================================================
 // Union of All Blocks
 // =============================================================================
 
@@ -207,6 +234,7 @@ export const pageBlockSchema = z.discriminatedUnion('type', [
   pricingBlockSchema,
   faqsBlockSchema,
   ctaBlockSchema,
+  contentBlockSchema,
 ]);
 
 export type PageBlock = z.infer<typeof pageBlockSchema>;

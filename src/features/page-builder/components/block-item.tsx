@@ -16,6 +16,7 @@ import {
   HelpCircle,
   Megaphone,
   GripVertical,
+  FileText,
 } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/shared/components/ui/card';
@@ -58,6 +59,7 @@ const blockIcons: Record<BlockType, React.ReactNode> = {
   pricing: <CreditCard className="h-4 w-4" />,
   faqs: <HelpCircle className="h-4 w-4" />,
   cta: <Megaphone className="h-4 w-4" />,
+  content: <FileText className="h-4 w-4" />,
 };
 
 const blockLabels: Record<BlockType, string> = {
@@ -67,6 +69,7 @@ const blockLabels: Record<BlockType, string> = {
   pricing: 'Precios',
   faqs: 'FAQs',
   cta: 'CTA',
+  content: 'Contenido',
 };
 
 export function BlockItem({

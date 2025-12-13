@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus, Sparkles, Briefcase, MessageSquareQuote, CreditCard, HelpCircle, Megaphone } from 'lucide-react';
+import { Plus, Sparkles, Briefcase, MessageSquareQuote, CreditCard, HelpCircle, Megaphone, FileText } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import {
   DropdownMenu,
@@ -51,6 +51,12 @@ const blockOptions: { type: BlockType; label: string; description: string; icon:
     label: 'CTA',
     description: 'Banner con llamada a la acción',
     icon: <Megaphone className="h-4 w-4" />,
+  },
+  {
+    type: 'content',
+    label: 'Contenido',
+    description: 'Texto con imagen',
+    icon: <FileText className="h-4 w-4" />,
   },
 ];
 
