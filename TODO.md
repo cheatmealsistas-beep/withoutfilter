@@ -7,28 +7,36 @@ Fixes pendientes de desarrollo (bloqueados por refactor en curso).
 ## Public App / Navbar
 
 ### Módulo de contenido en navbar público
-- [ ] Cuando se activa el módulo "courses/contenido", debe aparecer entrada en el navbar público
+- [x] Cuando se activa el módulo "courses/contenido", debe aparecer entrada en el navbar público
+  - Se activa automáticamente al publicar un curso (courses.command.ts)
 - [ ] El owner debería poder personalizar el nombre de esa entrada (ej: "Cursos", "Academia", "Formación")
-- [ ] La página `/courses` debe mostrar preview de los cursos creados
+- [x] La página `/courses` debe mostrar preview de los cursos creados
 
 **Archivos relacionados:**
 - `src/features/public-app/components/public-navbar.tsx`
 - `src/app/[locale]/(public)/app/[slug]/courses/page.tsx`
+- `src/features/courses/courses.command.ts` (publishCourse)
 
-### Eliminar botón "Ir a dashboard" del navbar
-- [ ] Cuando el owner está viendo la previsualización de su sitio, aparece un botón innecesario
-- [ ] Esa funcionalidad no aplica actualmente - eliminar
+### Botón "Admin" en navbar
+- [x] ~~Eliminar botón "Ir a dashboard" del navbar~~
+  - El botón "Admin" es útil para que el owner acceda rápido a su panel
+  - NO eliminar - es funcionalidad deseada
 
 **Archivos relacionados:**
 - `src/features/public-app/components/public-navbar.tsx`
 
-### Logo del usuario no se muestra
-- [ ] El logo configurado por el usuario no se representa en ningún sitio
-- [ ] Revisar dónde debería mostrarse (navbar público, dashboard, etc.)
+### Logo del usuario
+- [x] El logo configurado por el usuario ahora se sube a Supabase Storage
+- [x] Se muestra en navbar público y owner dashboard
+- [x] Añadida sección de cambio de logo en Settings del owner
 
 **Archivos relacionados:**
 - `src/features/public-app/components/public-navbar.tsx`
 - `src/features/owner-dashboard/components/owner-dashboard.tsx`
+- `src/features/owner-dashboard/components/organization-settings.tsx`
+- `src/features/onboarding/components/steps/step-logo.tsx`
+- `src/shared/lib/storage.ts`
+- `supabase/migrations/20251213000002_organization_logos_storage.sql`
 
 ---
 

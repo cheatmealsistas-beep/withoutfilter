@@ -219,3 +219,20 @@ export async function getOnboardingStateAction(): Promise<{
     data: state.data.data as Record<string, unknown>,
   };
 }
+
+/**
+ * Get current organization ID for the user
+ * Used for client-side operations like file uploads
+ */
+export async function getCurrentOrganizationIdAction(): Promise<{
+  organizationId: string | null;
+  error: string | null;
+}> {
+  const user = await getUser();
+  if (!user) {
+    return { organizationId: null, error: 'No autenticado' };
+  }
+
+  const { organizationId } = await handleGetCurrentApp(user.id);
+  return { organizationId, error: null };
+}

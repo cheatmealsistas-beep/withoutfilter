@@ -6,6 +6,7 @@ import { Input } from '@/shared/components/ui/input';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Label } from '@/shared/components/ui/label';
 import { Card, CardContent } from '@/shared/components/ui/card';
+import { IconPicker } from './icon-picker';
 import type { ServicesContent, ServiceItem } from '../../types';
 
 interface ServicesEditorProps {
@@ -85,7 +86,11 @@ export function ServicesEditor({ content, onChange }: ServicesEditorProps) {
           {content.services.map((service, index) => (
             <Card key={service.id} className="bg-muted/50">
               <CardContent className="p-3 space-y-3">
-                <div className="flex items-start gap-2">
+                <div className="flex items-start gap-3">
+                  <IconPicker
+                    value={service.icon}
+                    onChange={(icon) => updateService(index, { icon })}
+                  />
                   <div className="flex-1 space-y-2">
                     <Input
                       value={service.title}

@@ -14,12 +14,7 @@ export function PublicHero({ app, content }: PublicHeroProps) {
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center px-4">
       {/* Background gradient */}
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/50"
-        style={{
-          '--primary-color': app.primaryColor,
-        } as React.CSSProperties}
-      />
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-muted/50" />
 
       <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
         {/* Logo */}
@@ -49,10 +44,7 @@ export function PublicHero({ app, content }: PublicHeroProps) {
         <div className="pt-4">
           <Button
             size="lg"
-            className="text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
-            style={{
-              backgroundColor: app.primaryColor,
-            }}
+            className="text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all bg-primary hover:bg-primary/90"
             asChild
           >
             <a href={content.ctaUrl || '#contact'}>
@@ -74,10 +66,7 @@ export function PublicHero({ app, content }: PublicHeroProps) {
                 className="rounded-full"
               />
             ) : (
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
-                style={{ backgroundColor: app.primaryColor }}
-              >
+              <div className="w-12 h-12 rounded-full flex items-center justify-center text-primary-foreground font-semibold bg-primary">
                 {app.ownerName.charAt(0).toUpperCase()}
               </div>
             )}

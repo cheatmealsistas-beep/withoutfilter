@@ -14,7 +14,7 @@ interface OwnerDashboardProps {
 }
 
 export function OwnerDashboard({ data, locale }: OwnerDashboardProps) {
-  const t = useTranslations('owner-admin');
+  const t = useTranslations('app-[slug]-admin');
   const { organization, stats } = data;
 
   return (

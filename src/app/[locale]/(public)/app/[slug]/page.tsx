@@ -69,10 +69,11 @@ export default async function PublicAppPage({ params }: PublicAppPageProps) {
           enabledModules={enabledModules || []}
           locale={locale}
           isOwner={isOwner}
+          hasEditBar={isOwner}
         />
 
         {/* Main content - render blocks */}
-        <main className={`flex-1 ${isOwner ? 'pt-14' : ''}`}>
+        <main className="flex-1">
           <PublicBlocks blocks={pageContent.blocks} settings={pageContent.settings} />
         </main>
 
@@ -104,10 +105,11 @@ export default async function PublicAppPage({ params }: PublicAppPageProps) {
         enabledModules={enabledModules || []}
         locale={locale}
         isOwner={isOwner}
+        hasEditBar={isOwner}
       />
 
       {/* Main content */}
-      <main className={`flex-1 ${isOwner ? 'pt-14' : ''}`}>
+      <main className="flex-1">
         <PublicHero app={app} content={content} />
       </main>
 
