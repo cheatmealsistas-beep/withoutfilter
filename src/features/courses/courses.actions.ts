@@ -26,6 +26,7 @@ import {
   handleDeleteEnrollment,
   handleMarkLessonViewed,
 } from './courses.handler';
+import { getCourseEnrollments as getCourseEnrollmentsQuery } from './courses.query';
 import type {
   CreateCourseInput,
   UpdateCourseInput,
@@ -34,6 +35,7 @@ import type {
   CreateLessonInput,
   UpdateLessonInput,
   ReorderLessonsInput,
+  EnrollmentWithUser,
 } from './types';
 
 // ============================================
@@ -456,4 +458,19 @@ export async function markLessonViewedAction(courseId: string, lessonId: string)
   }
 
   return handleMarkLessonViewed(user.id, { course_id: courseId, lesson_id: lessonId });
+}
+
+// ============================================
+// QUERY ACTIONS (for client components)
+// ============================================
+
+export async function getCourseEnrollmentsAction(
+  courseId: string
+): Promise<{ data: EnrollmentWithUser[] | null; error: string | null }> {
+  const user = await getUser();
+  if (!user) {
+    return { data: null, error: 'Not authenticated' };
+  }
+
+  return getCourseEnrollmentsQuery(courseId);
 }

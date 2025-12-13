@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { AttributionData } from '@/features/attribution';
+import type { AttributionData } from '@/shared/types';
 
 export const profileSchema = z.object({
   fullName: z.string().min(1, 'Name is required').optional(),

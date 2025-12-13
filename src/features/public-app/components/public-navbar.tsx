@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
 import type { PublicApp } from '../types';
@@ -32,6 +32,8 @@ interface PublicNavbarProps {
   }>;
   locale: string;
   isOwner?: boolean;
+  /** Whether the edit bar is visible (owner viewing their app) */
+  hasEditBar?: boolean;
 }
 
 export function PublicNavbar({
@@ -39,12 +41,13 @@ export function PublicNavbar({
   enabledModules,
   locale,
   isOwner = false,
+  hasEditBar = false,
 }: PublicNavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Filter to only public modules that have routes configured
+  // Filter to only public modules that have routes configured (exclude home from nav links)
   const navItems = enabledModules
-    .filter((m) => m.isPublic && moduleConfig[m.type])
+    .filter((m) => m.isPublic && moduleConfig[m.type] && m.type !== 'home')
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .map((m) => ({
       type: m.type,
@@ -52,15 +55,13 @@ export function PublicNavbar({
       label: locale === 'es' ? moduleConfig[m.type].labelEs : moduleConfig[m.type].label,
     }));
 
-  // Don't render if only home is enabled (no navigation needed)
-  if (navItems.length <= 1) {
-    return null;
-  }
-
   const basePath = `/${locale}/app/${app.slug}`;
+  const hasNavItems = navItems.length > 0;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header
+      className={`sticky z-50 w-full border-b bg-background ${hasEditBar ? 'top-14' : 'top-0'}`}
+    >
       <nav className="max-w-7xl mx-auto px-4">
         <div className="flex h-14 items-center justify-between">
           {/* Logo/Brand */}
@@ -72,10 +73,7 @@ export function PublicNavbar({
                 className="h-8 w-8 object-contain rounded"
               />
             ) : (
-              <div
-                className="h-8 w-8 rounded flex items-center justify-center text-white font-bold"
-                style={{ backgroundColor: app.primaryColor || '#000' }}
-              >
+              <div className="h-8 w-8 rounded flex items-center justify-center text-primary-foreground font-bold bg-primary">
                 {app.name.charAt(0).toUpperCase()}
               </div>
             )}
@@ -106,40 +104,42 @@ export function PublicNavbar({
             )}
           </div>
 
-          {/* Mobile Menu */}
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="sm">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] sm:w-[320px]">
-              <div className="flex flex-col gap-4 mt-8">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.type}
-                    href={`${basePath}${item.path}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-3 text-lg font-medium hover:bg-muted rounded-lg transition-colors"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-
-                {isOwner && (
-                  <div className="pt-4 border-t mt-4">
+          {/* Mobile Menu - only show if there are nav items or owner actions */}
+          {(hasNavItems || isOwner) && (
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild className="md:hidden">
+                <Button variant="ghost" size="sm">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[280px] sm:w-[320px]">
+                <div className="flex flex-col gap-4 mt-8">
+                  {navItems.map((item) => (
                     <Link
-                      href={`/${locale}/app/${app.slug}/admin`}
+                      key={item.type}
+                      href={`${basePath}${item.path}`}
                       onClick={() => setMobileMenuOpen(false)}
+                      className="px-4 py-3 text-lg font-medium hover:bg-muted rounded-lg transition-colors"
                     >
-                      <Button className="w-full">Admin</Button>
+                      {item.label}
                     </Link>
-                  </div>
-                )}
-              </div>
-            </SheetContent>
-          </Sheet>
+                  ))}
+
+                  {isOwner && (
+                    <div className={hasNavItems ? 'pt-4 border-t mt-4' : ''}>
+                      <Link
+                        href={`/${locale}/app/${app.slug}/admin`}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Button className="w-full">Admin</Button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
       </nav>
     </header>

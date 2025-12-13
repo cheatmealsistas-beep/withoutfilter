@@ -5,6 +5,8 @@ export * from './types';
 export {
   getOrganizationCourses,
   getPublishedCourses,
+  getAllPublishedCourses,
+  getOwnerCourses,
   getUserAccessibleCourses,
   getCourseBySlug,
   getCourseById,

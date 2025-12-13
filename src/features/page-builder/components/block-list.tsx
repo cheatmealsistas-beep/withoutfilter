@@ -10,6 +10,7 @@ import {
   PricingEditor,
   FaqsEditor,
   CtaEditor,
+  ContentEditor,
 } from './editors';
 import type { PageBlock, BlockType } from '../types';
 
@@ -54,6 +55,8 @@ export function BlockList({
           return <FaqsEditor content={block.content} onChange={handleChange} />;
         case 'cta':
           return <CtaEditor content={block.content} onChange={handleChange} />;
+        case 'content':
+          return <ContentEditor content={block.content} onChange={handleChange} />;
         default:
           return null;
       }

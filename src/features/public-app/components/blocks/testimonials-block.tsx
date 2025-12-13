@@ -1,7 +1,7 @@
 'use client';
 
 import { Star } from 'lucide-react';
-import type { TestimonialsContent } from '@/features/page-builder/types';
+import type { TestimonialsContent } from '@/shared/types/page-blocks';
 
 interface TestimonialsBlockProps {
   content: TestimonialsContent;

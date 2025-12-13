@@ -51,7 +51,7 @@ export async function getPublicAppBySlug(
     slug: org.slug,
     logoUrl: org.logo_url,
     tagline: org.tagline,
-    primaryColor: org.primary_color || '#000000',
+    primaryColor: org.primary_color || '#6366f1',
     ownerName: profile?.full_name ?? null,
     ownerAvatar: profile?.avatar_url ?? null,
     professionalType: profile?.professional_type ?? null,
@@ -165,6 +165,7 @@ export async function getEnabledModules(
 }> {
   const supabase = createAdminClient();
 
+  // Get enabled modules from app_modules
   const { data, error } = await supabase
     .from('app_modules')
     .select('type, is_enabled, is_public, display_order')
@@ -176,13 +177,39 @@ export async function getEnabledModules(
     return { data: null, error: error.message };
   }
 
+  const modules = (data || []).map((m) => ({
+    type: m.type,
+    isEnabled: m.is_enabled ?? false,
+    isPublic: m.is_public ?? true,
+    displayOrder: m.display_order ?? 0,
+  }));
+
+  // Check if courses module exists in the list
+  const hasCoursesModule = modules.some((m) => m.type === 'courses');
+
+  // If no courses module, check if there are published courses
+  if (!hasCoursesModule) {
+    const { count } = await supabase
+      .from('courses')
+      .select('id', { count: 'exact', head: true })
+      .eq('organization_id', organizationId)
+      .eq('status', 'published');
+
+    // If there are published courses, add the courses module dynamically
+    if (count && count > 0) {
+      modules.push({
+        type: 'courses',
+        isEnabled: true,
+        isPublic: true,
+        displayOrder: 10,
+      });
+      // Sort by display order
+      modules.sort((a, b) => a.displayOrder - b.displayOrder);
+    }
+  }
+
   return {
-    data: (data || []).map((m) => ({
-      type: m.type,
-      isEnabled: m.is_enabled ?? false,
-      isPublic: m.is_public ?? true,
-      displayOrder: m.display_order ?? 0,
-    })),
+    data: modules,
     error: null,
   };
 }

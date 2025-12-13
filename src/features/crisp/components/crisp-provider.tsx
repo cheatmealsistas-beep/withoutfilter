@@ -1,5 +1,4 @@
-import { getUser } from '@/shared/auth';
-import { hasActiveSubscription } from '@/features/billing/billing.query';
+import { getUser, hasActiveSubscription } from '@/shared/auth';
 import { getCrispSettings } from '../crisp.query';
 import { CrispChat } from './crisp-chat';
 

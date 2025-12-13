@@ -3,7 +3,7 @@
 import { Check } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/lib/utils';
-import type { PricingContent } from '@/features/page-builder/types';
+import type { PricingContent } from '@/shared/types/page-blocks';
 
 interface PricingBlockProps {
   content: PricingContent;

@@ -2,7 +2,7 @@
 
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
-import type { HeroContent } from '@/features/page-builder/types';
+import type { HeroContent } from '@/shared/types/page-blocks';
 
 interface HeroBlockProps {
   content: HeroContent;

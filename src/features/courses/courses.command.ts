@@ -81,6 +81,18 @@ export async function publishCourse(courseId: string): Promise<{
 }> {
   const supabase = await createClientServer();
 
+  // First, get the course to know the organization_id
+  const { data: courseData, error: fetchError } = await supabase
+    .from('courses')
+    .select('organization_id')
+    .eq('id', courseId)
+    .single();
+
+  if (fetchError) {
+    return { data: null, error: fetchError.message };
+  }
+
+  // Publish the course
   const { data, error } = await supabase
     .from('courses')
     .update({
@@ -92,7 +104,49 @@ export async function publishCourse(courseId: string): Promise<{
     .select()
     .single();
 
-  return { data, error: error?.message ?? null };
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  // Ensure the "courses" module is enabled for the organization's navbar
+  await ensureCoursesModuleEnabled(supabase, courseData.organization_id);
+
+  return { data, error: null };
+}
+
+/**
+ * Ensure the courses module is enabled in app_modules for navbar display
+ */
+async function ensureCoursesModuleEnabled(
+  supabase: Awaited<ReturnType<typeof createClientServer>>,
+  organizationId: string
+): Promise<void> {
+  // Check if courses module already exists
+  const { data: existingModule } = await supabase
+    .from('app_modules')
+    .select('id, is_enabled, is_public')
+    .eq('organization_id', organizationId)
+    .eq('type', 'courses')
+    .maybeSingle();
+
+  if (existingModule) {
+    // Enable and make public if not already
+    if (!existingModule.is_enabled || !existingModule.is_public) {
+      await supabase
+        .from('app_modules')
+        .update({ is_enabled: true, is_public: true })
+        .eq('id', existingModule.id);
+    }
+  } else {
+    // Create the courses module
+    await supabase.from('app_modules').insert({
+      organization_id: organizationId,
+      type: 'courses',
+      is_enabled: true,
+      is_public: true,
+      display_order: 10, // After home (0), before about/contact
+    });
+  }
 }
 
 /**

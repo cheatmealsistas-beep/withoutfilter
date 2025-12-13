@@ -1,0 +1,39 @@
+{
+  "header": {
+    "adminPanel": "Panel de administrador",
+    "viewSite": "Ver mi web"
+  },
+  "trial": {
+    "daysRemaining": "Te quedan {days} días de prueba gratuita",
+    "afterTrial": "Después de eso, elige un plan para continuar",
+    "viewPlans": "Ver planes"
+  },
+  "stats": {
+    "totalViews": "Visitas totales",
+    "comingSoon": "Próximamente analytics",
+    "activeModules": "Módulos activos",
+    "sectionsDescription": "Secciones de tu web",
+    "status": "Estado",
+    "trial": "Prueba",
+    "active": "Activo"
+  },
+  "quickActions": {
+    "title": "Acciones rápidas",
+    "customize": {
+      "title": "Personalizar",
+      "description": "Edita colores, logo y textos"
+    },
+    "modules": {
+      "title": "Módulos",
+      "description": "Activa o desactiva secciones"
+    },
+    "settings": {
+      "title": "Configuración",
+      "description": "Dominio, SEO y más"
+    },
+    "content": {
+      "title": "Contenido",
+      "description": "Crea y gestiona tu material"
+    }
+  }
+}

@@ -6,9 +6,9 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import {
   FadeIn,
-  DotPattern,
   AnimatedGradientText,
 } from '@/shared/components/magic-ui';
+import { DotPattern } from '@/shared/components/ui/dot-pattern';
 
 export default function NotFound() {
   const t = useTranslations('errors');

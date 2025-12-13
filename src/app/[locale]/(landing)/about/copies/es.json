@@ -1,37 +1,37 @@
 {
   "meta": {
-    "title": "Sobre Nosotros",
-    "description": "Conoce más sobre nuestra misión y equipo"
+    "title": "Sobre Modulary",
+    "description": "Descubre cómo Modulary ayuda a coaches, entrenadores y creadores a construir sus propias apps sin código"
   },
   "hero": {
-    "label": "Sobre Nosotros",
-    "titleStart": "Construyendo el futuro del",
-    "titleHighlight": "Software",
-    "description": "Estamos en una misión para ayudar a los desarrolladores a construir mejores productos más rápido. Nuestro equipo es apasionado por crear herramientas que marcan la diferencia."
+    "label": "Nuestra Historia",
+    "titleStart": "Empoderando a Creadores a",
+    "titleHighlight": "Crear Sin Límites",
+    "description": "Creemos que cada coach, entrenador y creador merece su propia plataforma. Modulary hace posible unificar tus cursos, clientes y contenido en una app con tu marca—sin escribir una sola línea de código."
   },
   "mission": {
     "mission": {
       "title": "Nuestra Misión",
-      "description": "Empoderar a los desarrolladores con las herramientas que necesitan para construir productos excepcionales sin reinventar la rueda."
+      "description": "Democratizar la creación de apps. Ponemos el poder del software personalizado en manos de quienes más lo necesitan—los expertos que transforman vidas cada día."
     },
     "vision": {
       "title": "Nuestra Visión",
-      "description": "Un mundo donde los desarrolladores puedan enfocarse en la innovación en lugar de código repetitivo y tareas redundantes."
+      "description": "Un mundo donde los profesionales puedan enfocarse en lo que mejor saben hacer—entrenar, enseñar, sanar—mientras su tecnología funciona sin fricciones."
     },
     "values": {
       "title": "Nuestros Valores",
-      "description": "Calidad, simplicidad y experiencia del desarrollador están en el corazón de todo lo que construimos."
+      "description": "Simplicidad sobre complejidad. Tu éxito es nuestro éxito. Construimos herramientas que simplemente funcionan, para que puedas enfocarte en tus clientes."
     }
   },
   "team": {
-    "label": "Nuestro Equipo",
-    "title": "Conoce a las personas detrás del producto",
-    "description": "Un equipo pequeño pero poderoso dedicado a construir las mejores herramientas para desarrolladores."
+    "label": "El Equipo",
+    "title": "Creado por Creadores, para Creadores",
+    "description": "Hemos estado en tu lugar. Nuestro equipo combina experiencia técnica con conocimiento real en coaching y creación de contenido."
   },
   "cta": {
-    "title": "¿Listo para comenzar?",
-    "description": "Únete a miles de desarrolladores que están construyendo más rápido con nuestra plataforma.",
-    "primaryButton": "Empezar a construir",
+    "title": "¿Listo para Unificar tu Flujo de Trabajo?",
+    "description": "Únete a miles de coaches y creadores que dejaron de hacer malabares con herramientas y empezaron a prosperar.",
+    "primaryButton": "Crea Tu App",
     "secondaryButton": "Ver Precios"
   }
 }

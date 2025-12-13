@@ -23,6 +23,7 @@ export interface OwnerDashboardData {
     id: string;
     type: string;
     isEnabled: boolean;
+    isPublic: boolean;
     displayOrder: number;
   }>;
   trialEndsAt: string | null;

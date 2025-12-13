@@ -112,19 +112,15 @@ export function ToolsToUnifiedIllustration({ className = '' }: { className?: str
         />
 
         {/* Logo Modulary (3 módulos) - en el centro */}
-        <g transform="translate(90, 60)">
+        <g transform="translate(99, 50)">
           {/* Módulo izquierdo */}
-          <rect x="0" y="20" width="22" height="40" rx="6" fill="white" opacity="0.95" />
+          <rect x="0" y="20" width="22" height="44" rx="6" fill="white" opacity="0.95" />
 
           {/* Módulo central (más alto) */}
-          <rect x="30" y="0" width="22" height="60" rx="6" fill="white" opacity="0.95" />
+          <rect x="30" y="0" width="22" height="64" rx="6" fill="white" opacity="0.95" />
 
           {/* Módulo derecho */}
-          <rect x="60" y="20" width="22" height="40" rx="6" fill="white" opacity="0.95" />
-
-          {/* Líneas de conexión sutiles */}
-          <line x1="22" y1="40" x2="30" y2="30" stroke="white" strokeWidth="2" opacity="0.5" />
-          <line x1="52" y1="30" x2="60" y2="40" stroke="white" strokeWidth="2" opacity="0.5" />
+          <rect x="60" y="20" width="22" height="44" rx="6" fill="white" opacity="0.95" />
         </g>
 
         {/* Texto "Modulary" */}

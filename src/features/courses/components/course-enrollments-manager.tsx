@@ -40,8 +40,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/components/ui/alert-dialog';
-import { getCourseEnrollments } from '../courses.query';
-import { revokeEnrollmentAction, deleteEnrollmentAction } from '../courses.actions';
+import { getCourseEnrollmentsAction, revokeEnrollmentAction, deleteEnrollmentAction } from '../courses.actions';
 import type { EnrollmentWithUser } from '../types';
 
 interface CourseEnrollmentsManagerProps {
@@ -67,7 +66,7 @@ export function CourseEnrollmentsManager({
 
   const loadEnrollments = async () => {
     setIsLoading(true);
-    const { data, error } = await getCourseEnrollments(courseId);
+    const { data, error } = await getCourseEnrollmentsAction(courseId);
     setIsLoading(false);
 
     if (error) {

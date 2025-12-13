@@ -9,9 +9,9 @@ import {
   AnimatedShinyText,
   BorderBeam,
   AnimatedGradientText,
-  DotPattern,
   FadeIn,
 } from '@/shared/components/magic-ui';
+import { DotPattern } from '@/shared/components/ui/dot-pattern';
 import { cn } from '@/shared/lib/utils';
 
 interface HeroSectionProps {

@@ -6,6 +6,7 @@ import type {
   PricingBlock,
   FaqsBlock,
   CtaBlock,
+  ContentBlock,
   PageBlock,
 } from '../types';
 
@@ -197,6 +198,25 @@ export function createDefaultCtaBlock(order: number): CtaBlock {
 }
 
 /**
+ * Create a default Content block (Text with Image)
+ */
+export function createDefaultContentBlock(order: number): ContentBlock {
+  return {
+    id: generateId(),
+    type: 'content',
+    order,
+    isVisible: true,
+    content: {
+      headline: 'Sobre nosotros',
+      subheadline: 'Conoce nuestra historia',
+      body: 'Aquí puedes contar tu historia, explicar tu misión o describir lo que te hace único. Este es un espacio para conectar con tus visitantes de forma más personal.\n\nPuedes añadir varios párrafos para desarrollar tu mensaje.',
+      imagePosition: 'right',
+      style: 'default',
+    },
+  };
+}
+
+/**
  * Create a default block based on type
  */
 export function createDefaultBlock(type: BlockType, order: number): PageBlock {
@@ -213,6 +233,8 @@ export function createDefaultBlock(type: BlockType, order: number): PageBlock {
       return createDefaultFaqsBlock(order);
     case 'cta':
       return createDefaultCtaBlock(order);
+    case 'content':
+      return createDefaultContentBlock(order);
     default:
       throw new Error(`Unknown block type: ${type}`);
   }

@@ -10,7 +10,7 @@ interface InfoBarSettingsProps {
   locale: string;
 }
 
-export function InfoBarSettings({
+export function InfoBarSettingsPanel({
   initialSettings,
   locale,
 }: InfoBarSettingsProps) {
