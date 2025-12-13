@@ -40,10 +40,10 @@ export const brand = {
   logo: '/logo.svg',
 
   /** Small icon for favicon context */
-  icon: '/icon.svg',
+  icon: '/favicon.svg',
 
   /** Browser favicon */
-  favicon: '/favicon.ico',
+  favicon: '/favicon.svg',
 
   // ═══════════════════════════════════════════════════════════════════
   // TYPOGRAPHY

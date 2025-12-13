@@ -1,0 +1,17 @@
+<svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="modularyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0EA5E9" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+  </defs>
+
+  <!-- Módulo izquierdo -->
+  <rect x="2" y="14" width="10" height="22" rx="4" fill="#0EA5E9" />
+
+  <!-- Módulo central (más alto) - con gradiente -->
+  <rect x="15" y="4" width="10" height="32" rx="4" fill="url(#modularyGradient)" />
+
+  <!-- Módulo derecho -->
+  <rect x="28" y="14" width="10" height="22" rx="4" fill="#8B5CF6" />
+</svg>
