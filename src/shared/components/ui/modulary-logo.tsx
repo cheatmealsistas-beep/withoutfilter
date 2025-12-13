@@ -4,20 +4,23 @@ interface ModularyLogoProps {
   className?: string;
   size?: number;
   showText?: boolean;
+  mono?: boolean;
 }
 
 /**
  * Modulary Logo - 3 módulos interconectados formando "M" abstracta
- * Diseño: bloques cortos y anchos con esquinas redondeadas
- * Color: Sky Blue (#0EA5E9) con acento Purple (#8B5CF6)
+ * Diseño: bloques verticales con esquinas redondeadas
+ * Color: Sky Blue (#0EA5E9) → Purple (#8B5CF6) con gradiente en el centro
  */
 export function ModularyLogo({
   className = '',
   size = 40,
-  showText = false
+  showText = false,
+  mono = false
 }: ModularyLogoProps) {
   const logoWidth = showText ? size * 3.5 : size;
   const logoHeight = size;
+  const uniqueId = React.useId().replace(/:/g, '');
 
   return (
     <svg
@@ -29,6 +32,13 @@ export function ModularyLogo({
       className={className}
       aria-label="Modulary Logo"
     >
+      <defs>
+        <linearGradient id={`modularyGradient-${uniqueId}`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor={mono ? "currentColor" : "#0EA5E9"} />
+          <stop offset="100%" stopColor={mono ? "currentColor" : "#8B5CF6"} />
+        </linearGradient>
+      </defs>
+
       {/* Módulo izquierdo */}
       <rect
         x="2"
@@ -36,23 +46,17 @@ export function ModularyLogo({
         width="10"
         height="22"
         rx="4"
-        fill="#0EA5E9"
+        fill={mono ? "currentColor" : "#0EA5E9"}
       />
 
       {/* Módulo central (más alto) - con gradiente */}
-      <defs>
-        <linearGradient id="modularyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#0EA5E9" />
-          <stop offset="100%" stopColor="#8B5CF6" />
-        </linearGradient>
-      </defs>
       <rect
         x="15"
         y="4"
         width="10"
         height="32"
         rx="4"
-        fill="url(#modularyGradient)"
+        fill={mono ? "currentColor" : `url(#modularyGradient-${uniqueId})`}
       />
 
       {/* Módulo derecho */}
@@ -62,7 +66,7 @@ export function ModularyLogo({
         width="10"
         height="22"
         rx="4"
-        fill="#8B5CF6"
+        fill={mono ? "currentColor" : "#8B5CF6"}
       />
 
       {showText && (
@@ -87,7 +91,8 @@ export function ModularyLogo({
  */
 export function ModularyIcon({
   className = '',
-  size = 24
+  size = 24,
+  mono = false
 }: Omit<ModularyLogoProps, 'showText'>) {
-  return <ModularyLogo className={className} size={size} showText={false} />;
+  return <ModularyLogo className={className} size={size} showText={false} mono={mono} />;
 }

@@ -85,7 +85,7 @@ export async function getOwnerDashboardData(
   // Get modules for this organization
   const { data: modules } = await supabase
     .from('app_modules')
-    .select('id, type, is_enabled, display_order')
+    .select('id, type, is_enabled, is_public, display_order')
     .eq('organization_id', org.id)
     .order('display_order', { ascending: true });
 
@@ -124,6 +124,7 @@ export async function getOwnerDashboardData(
         id: m.id,
         type: m.type,
         isEnabled: m.is_enabled ?? false,
+        isPublic: m.is_public ?? true,
         displayOrder: m.display_order ?? 0,
       })),
       trialEndsAt: profile?.trial_ends_at || null,

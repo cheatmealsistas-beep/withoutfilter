@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/shared/components/ui/button';
-import { Pencil, Eye, ExternalLink } from 'lucide-react';
+import { Pencil, Eye } from 'lucide-react';
 
 interface EditBarProps {
   slug: string;
@@ -28,8 +28,8 @@ export function EditBar({ slug, locale }: EditBarProps) {
   }
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-b">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div className="fixed top-0 left-0 right-0 z-[60] bg-background border-b h-14">
+      <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">Editando:</span>
           <span className="text-sm text-muted-foreground">{slug}</span>
@@ -43,13 +43,6 @@ export function EditBar({ slug, locale }: EditBarProps) {
           >
             <Eye className="mr-2 h-4 w-4" />
             Vista previa
-          </Button>
-
-          <Button variant="ghost" size="sm" asChild>
-            <Link href={`/${locale}/dashboard`}>
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Dashboard
-            </Link>
           </Button>
 
           <Button size="sm" asChild>

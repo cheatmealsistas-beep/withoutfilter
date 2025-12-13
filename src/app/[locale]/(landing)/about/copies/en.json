@@ -1,37 +1,37 @@
 {
   "meta": {
-    "title": "About Us",
-    "description": "Learn more about our mission and team"
+    "title": "About Modulary",
+    "description": "Learn how Modulary helps coaches, trainers, and creators build their own apps without code"
   },
   "hero": {
-    "label": "About Us",
-    "titleStart": "Building the Future of",
-    "titleHighlight": "Software",
-    "description": "We're on a mission to help developers build better products faster. Our team is passionate about creating tools that make a real difference."
+    "label": "Our Story",
+    "titleStart": "Empowering Creators to",
+    "titleHighlight": "Build Without Limits",
+    "description": "We believe every coach, trainer, and creator deserves their own platform. Modulary makes it possible to unify your courses, clients, and content in one branded app—without writing a single line of code."
   },
   "mission": {
     "mission": {
       "title": "Our Mission",
-      "description": "To empower developers with the tools they need to build exceptional products without reinventing the wheel."
+      "description": "To democratize app creation. We're putting the power of custom software in the hands of those who need it most—the experts who transform lives every day."
     },
     "vision": {
       "title": "Our Vision",
-      "description": "A world where developers can focus on innovation instead of boilerplate code and repetitive tasks."
+      "description": "A world where professionals can focus on what they do best—coaching, teaching, healing—while their technology works seamlessly in the background."
     },
     "values": {
       "title": "Our Values",
-      "description": "Quality, simplicity, and developer experience are at the heart of everything we build."
+      "description": "Simplicity over complexity. Your success is our success. We build tools that just work, so you can focus on your clients."
     }
   },
   "team": {
-    "label": "Our Team",
-    "title": "Meet the People Behind the Product",
-    "description": "A small but mighty team dedicated to building the best developer tools."
+    "label": "The Team",
+    "title": "Built by Creators, for Creators",
+    "description": "We've been in your shoes. Our team combines tech expertise with real experience in coaching and content creation."
   },
   "cta": {
-    "title": "Ready to Get Started?",
-    "description": "Join thousands of developers who are building faster with our platform.",
-    "primaryButton": "Start Building",
-    "secondaryButton": "View Pricing"
+    "title": "Ready to Unify Your Workflow?",
+    "description": "Join thousands of coaches and creators who stopped juggling tools and started thriving.",
+    "primaryButton": "Build Your App",
+    "secondaryButton": "See Pricing"
   }
 }

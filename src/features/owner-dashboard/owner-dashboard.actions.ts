@@ -4,6 +4,11 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@supabase/supabase-js';
 import { getUser } from '@/shared/auth';
 import { isOwnerOfOrganization, getOrganizationBySlug } from './owner-dashboard.query';
+import {
+  handleToggleModule,
+  handleSetModulePublic,
+  handleReorderModules,
+} from './owner-dashboard.handler';
 
 function createAdminClient() {
   return createClient(
@@ -131,4 +136,89 @@ export async function updateLogoAction(
   revalidatePath(`/app/${slug}/admin`);
 
   return { success: true };
+}
+
+/**
+ * Toggle module enabled/disabled
+ */
+export async function toggleModuleAction(
+  slug: string,
+  moduleType: string,
+  isEnabled: boolean
+): Promise<ActionResult> {
+  const user = await getUser();
+  if (!user) {
+    return { success: false, error: 'No autenticado' };
+  }
+
+  const result = await handleToggleModule(user.id, slug, {
+    type: moduleType,
+    isEnabled,
+  });
+
+  if (result.success) {
+    // Revalidate all paths that might show modules
+    revalidatePath(`/app/${slug}`);
+    revalidatePath(`/app/${slug}/admin`);
+    revalidatePath(`/app/${slug}/admin/modules`);
+  }
+
+  return {
+    success: result.success,
+    error: result.error || undefined,
+  };
+}
+
+/**
+ * Set module public/private visibility
+ */
+export async function setModulePublicAction(
+  slug: string,
+  moduleType: string,
+  isPublic: boolean
+): Promise<ActionResult> {
+  const user = await getUser();
+  if (!user) {
+    return { success: false, error: 'No autenticado' };
+  }
+
+  const result = await handleSetModulePublic(user.id, slug, {
+    type: moduleType,
+    isPublic,
+  });
+
+  if (result.success) {
+    revalidatePath(`/app/${slug}`);
+    revalidatePath(`/app/${slug}/admin/modules`);
+  }
+
+  return {
+    success: result.success,
+    error: result.error || undefined,
+  };
+}
+
+/**
+ * Reorder modules
+ */
+export async function reorderModulesAction(
+  slug: string,
+  modules: Array<{ type: string; displayOrder: number }>
+): Promise<ActionResult> {
+  const user = await getUser();
+  if (!user) {
+    return { success: false, error: 'No autenticado' };
+  }
+
+  const result = await handleReorderModules(user.id, slug, modules);
+
+  if (result.success) {
+    revalidatePath(`/app/${slug}`);
+    revalidatePath(`/app/${slug}/admin/modules`);
+  }
+
+  return {
+    success: result.success,
+    error: result.error || undefined,
+  };
 }

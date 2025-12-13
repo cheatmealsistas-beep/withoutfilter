@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/shared/components/ui/button';
 import { SkipLink } from '@/shared/components/ui/skip-link';
+import { ModularyLogo } from '@/shared/components/ui/modulary-logo';
 import { brand } from '@/shared/config';
 import { useConsent } from '@/features/consent/hooks/use-consent';
 
@@ -24,7 +25,8 @@ export function MarketingLayout({ children }: MarketingLayoutProps) {
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-14 items-center">
             <div className="mr-4 hidden md:flex">
-              <Link href={`/${locale}`} className="mr-6 flex items-center space-x-2">
+              <Link href={`/${locale}`} className="mr-6 flex items-center gap-2">
+                <ModularyLogo size={32} />
                 <span className="hidden font-bold sm:inline-block">
                   {brand.name}
                 </span>

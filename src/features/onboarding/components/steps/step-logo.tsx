@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/shared/components/ui/button';
-import { saveStep3Action } from '../../onboarding.actions';
+import { saveStep3Action, getCurrentOrganizationIdAction } from '../../onboarding.actions';
+import { uploadOrganizationLogo } from '@/shared/lib/storage';
 import { toast } from 'sonner';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Loader2 } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 
 interface StepLogoProps {
@@ -13,9 +14,12 @@ interface StepLogoProps {
 
 export function StepLogo({ onComplete }: StepLogoProps) {
   const [pending, setPending] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const fileRef = useRef<File | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -31,6 +35,9 @@ export function StepLogo({ onComplete }: StepLogoProps) {
       return;
     }
 
+    // Store file reference for later upload
+    fileRef.current = file;
+
     // Create preview
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -38,20 +45,45 @@ export function StepLogo({ onComplete }: StepLogoProps) {
     };
     reader.readAsDataURL(file);
 
-    // TODO: In production, upload to Supabase Storage and get URL
-    // For now, we just show the preview
+    // Upload to Supabase Storage
+    setUploading(true);
+    try {
+      const { organizationId, error: orgError } = await getCurrentOrganizationIdAction();
+      if (orgError || !organizationId) {
+        toast.error('Error al obtener la organización');
+        setUploading(false);
+        return;
+      }
+
+      const { url, error } = await uploadOrganizationLogo(organizationId, file);
+      if (error) {
+        toast.error(`Error al subir: ${error}`);
+        setLogoPreview(null);
+        fileRef.current = null;
+      } else if (url) {
+        setLogoUrl(url);
+        toast.success('Logo subido correctamente');
+      }
+    } catch {
+      toast.error('Error al subir el logo');
+      setLogoPreview(null);
+      fileRef.current = null;
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleRemoveLogo = () => {
     setLogoPreview(null);
+    setLogoUrl(null);
+    fileRef.current = null;
   };
 
   const handleContinue = async () => {
     setPending(true);
 
     try {
-      // TODO: If logoPreview exists, upload to Supabase Storage first
-      const result = await saveStep3Action(logoPreview ?? undefined);
+      const result = await saveStep3Action(logoUrl ?? undefined);
 
       if (result.success) {
         onComplete();
@@ -84,13 +116,20 @@ export function StepLogo({ onComplete }: StepLogoProps) {
                 className="w-full h-full object-cover"
               />
             </div>
-            <button
-              onClick={handleRemoveLogo}
-              className="absolute -top-2 -right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90"
-              aria-label="Eliminar logo"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            {uploading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-background/80 rounded-lg">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              </div>
+            )}
+            {!uploading && (
+              <button
+                onClick={handleRemoveLogo}
+                className="absolute -top-2 -right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90"
+                aria-label="Eliminar logo"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
         ) : (
           <label
@@ -116,8 +155,12 @@ export function StepLogo({ onComplete }: StepLogoProps) {
         </p>
       </div>
 
-      <Button onClick={handleContinue} className="w-full" disabled={pending}>
-        {pending ? 'Guardando...' : logoPreview ? 'Continuar' : 'Saltar por ahora'}
+      <Button
+        onClick={handleContinue}
+        className="w-full"
+        disabled={pending || uploading}
+      >
+        {pending ? 'Guardando...' : uploading ? 'Subiendo...' : logoPreview ? 'Continuar' : 'Saltar por ahora'}
       </Button>
     </div>
   );

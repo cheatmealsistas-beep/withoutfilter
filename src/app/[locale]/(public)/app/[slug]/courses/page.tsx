@@ -9,7 +9,7 @@ import {
   PublicNavbar,
   PublicFooter,
 } from '@/features/public-app';
-import { getPublishedCourses, getUserAccessibleCourses } from '@/features/courses';
+import { getPublishedCourses, getOwnerCourses, getUserAccessibleCourses } from '@/features/courses';
 import {
   Card,
   CardContent,
@@ -39,12 +39,18 @@ export default async function PublicCoursesPage({ params }: CoursesPageProps) {
   // Get enabled modules for navigation
   const { data: enabledModules } = await getEnabledModules(app.id);
 
-  // Get courses based on user authentication
+  // Get courses based on user authentication and ownership
   let courses;
-  if (user) {
+  if (isOwner) {
+    // Owner sees ALL courses (including drafts) to preview their page
+    const { data } = await getOwnerCourses(app.id);
+    courses = data?.map((c) => ({ ...c, is_enrolled: true }));
+  } else if (user) {
+    // Authenticated users see public + enrolled private courses
     const { data } = await getUserAccessibleCourses(app.id, user.id);
     courses = data;
   } else {
+    // Anonymous users see only public courses
     const { data } = await getPublishedCourses(app.id);
     courses = data?.map((c) => ({ ...c, is_enrolled: false }));
   }

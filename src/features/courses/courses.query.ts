@@ -75,6 +75,47 @@ export async function getPublishedCourses(organizationId: string): Promise<{
 }
 
 /**
+ * Get ALL published courses for an organization (public + private)
+ * Used by owners to see all their published content
+ */
+export async function getAllPublishedCourses(organizationId: string): Promise<{
+  data: Course[] | null;
+  error: string | null;
+}> {
+  const supabase = await createClientServer();
+
+  const { data, error } = await supabase
+    .from('courses')
+    .select('*')
+    .eq('organization_id', organizationId)
+    .eq('status', 'published')
+    .order('is_featured', { ascending: false })
+    .order('display_order', { ascending: true });
+
+  return { data, error: error?.message ?? null };
+}
+
+/**
+ * Get ALL courses for an organization (including drafts)
+ * Used by owners to preview their content page
+ */
+export async function getOwnerCourses(organizationId: string): Promise<{
+  data: Course[] | null;
+  error: string | null;
+}> {
+  const supabase = await createClientServer();
+
+  const { data, error } = await supabase
+    .from('courses')
+    .select('*')
+    .eq('organization_id', organizationId)
+    .order('is_featured', { ascending: false })
+    .order('display_order', { ascending: true });
+
+  return { data, error: error?.message ?? null };
+}
+
+/**
  * Get courses accessible to a user (enrolled + public)
  */
 export async function getUserAccessibleCourses(
