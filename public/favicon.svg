@@ -1,17 +1,14 @@
-<svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="modularyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#0EA5E9" />
-      <stop offset="100%" stop-color="#8B5CF6" />
+    <linearGradient id="fireGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#FF6B35" />
+      <stop offset="50%" stop-color="#FF4500" />
+      <stop offset="100%" stop-color="#FFD700" />
     </linearGradient>
   </defs>
-
-  <!-- Módulo izquierdo -->
-  <rect x="2" y="14" width="10" height="22" rx="4" fill="#0EA5E9" />
-
-  <!-- Módulo central (más alto) - con gradiente -->
-  <rect x="15" y="4" width="10" height="32" rx="4" fill="url(#modularyGradient)" />
-
-  <!-- Módulo derecho -->
-  <rect x="28" y="14" width="10" height="22" rx="4" fill="#8B5CF6" />
+  <!-- Fire shape -->
+  <path d="M16 2C16 2 8 10 8 18C8 22.4183 11.5817 26 16 26C20.4183 26 24 22.4183 24 18C24 10 16 2 16 2Z" fill="url(#fireGradient)"/>
+  <path d="M16 10C16 10 12 14 12 18C12 20.2091 13.7909 22 16 22C18.2091 22 20 20.2091 20 18C20 14 16 10 16 10Z" fill="#FFD700"/>
+  <!-- WF text -->
+  <text x="16" y="30" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="#333" text-anchor="middle">WF</text>
 </svg>
