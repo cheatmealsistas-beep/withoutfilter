@@ -35,22 +35,36 @@ export async function handleStartGame(
   roomId: string,
   hostPlayerId: string
 ): Promise<StartGameState> {
+  console.log('[handleStartGame] Starting...', { roomId, hostPlayerId });
+
   // Get room config
   const configResult = await getRoomConfig(roomId);
+  console.log('[handleStartGame] Config:', JSON.stringify(configResult));
   if (configResult.error || !configResult.data) {
     return { success: false, error: 'No se pudo obtener la configuración' };
   }
 
   // Get players
   const playersResult = await getPlayersInGame(roomId);
-  if (playersResult.error || playersResult.data.length < 2) {
-    return { success: false, error: 'Se necesitan al menos 2 jugadores' };
+  console.log('[handleStartGame] Players:', JSON.stringify({
+    count: playersResult.data.length,
+    error: playersResult.error,
+    players: playersResult.data.map((p) => ({ id: p.id, is_host: p.is_host })),
+  }));
+
+  if (playersResult.error) {
+    return { success: false, error: 'Error obteniendo jugadores: ' + playersResult.error };
+  }
+
+  if (playersResult.data.length < 2) {
+    return { success: false, error: `Se necesitan al menos 2 jugadores (hay ${playersResult.data.length})` };
   }
 
   // Verify host
   const hostPlayer = playersResult.data.find((p) => p.id === hostPlayerId);
+  console.log('[handleStartGame] Host check:', { hostPlayerId, found: !!hostPlayer, is_host: hostPlayer?.is_host });
   if (!hostPlayer?.is_host) {
-    return { success: false, error: 'Solo el anfitrión puede iniciar' };
+    return { success: false, error: `Solo el anfitrión puede iniciar (player: ${hostPlayerId}, is_host: ${hostPlayer?.is_host})` };
   }
 
   // Reset scores for new game
@@ -61,25 +75,33 @@ export async function handleStartGame(
   const shuffledOrder = [...playerIds].sort(() => Math.random() - 0.5);
 
   // Create game session
+  console.log('[handleStartGame] Creating session...');
   const sessionResult = await createGameSession(
     roomId,
     configResult.data.roundsPerGame,
     shuffledOrder
   );
+  console.log('[handleStartGame] Session result:', JSON.stringify(sessionResult));
 
   if (sessionResult.error || !sessionResult.data) {
-    return { success: false, error: sessionResult.error || 'No se pudo crear la sesión' };
+    return { success: false, error: sessionResult.error || 'No se pudo crear la sesión de juego' };
   }
 
   // Get first content
+  console.log('[handleStartGame] Getting content for:', configResult.data.categories);
   const contentResult = await getRandomContent(
     roomId,
     configResult.data.categories,
     []
   );
+  console.log('[handleStartGame] Content result:', JSON.stringify({
+    hasData: !!contentResult.data,
+    error: contentResult.error,
+    type: contentResult.data?.type,
+  }));
 
   if (contentResult.error || !contentResult.data) {
-    return { success: false, error: 'No hay contenido disponible' };
+    return { success: false, error: contentResult.error || 'No hay contenido disponible' };
   }
 
   // Set first round content
@@ -92,6 +114,7 @@ export async function handleStartGame(
   // Update room status to playing
   await updateRoomStatus(roomId, 'playing');
 
+  console.log('[handleStartGame] SUCCESS!');
   return {
     success: true,
     sessionId: sessionResult.data.id,
