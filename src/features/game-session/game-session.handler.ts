@@ -154,16 +154,24 @@ export async function handleSubmitVote(
 }
 
 /**
- * Handle advancing to next round (called by host or automatically)
+ * Handle showing results (calculates points, changes phase to showing_results)
+ * Called when host clicks "Ver Resultados"
  */
-export async function handleAdvanceRound(
+export async function handleShowResults(
   roomId: string,
   sessionId: string
-): Promise<AdvanceRoundState> {
-  // First, calculate and award points for current round
+): Promise<{ success: boolean; error?: string }> {
+  console.log('[handleShowResults] Starting...', { roomId, sessionId });
+
   const session = await getGameSessionByRoomId(roomId);
   if (!session.data) {
     return { success: false, error: 'Sesión no encontrada' };
+  }
+
+  // Don't process if already showing results
+  if (session.data.phase === 'showing_results') {
+    console.log('[handleShowResults] Already showing results, skipping');
+    return { success: true };
   }
 
   const currentContent = session.data.current_content;
@@ -184,8 +192,8 @@ export async function handleAdvanceRound(
       case 'confession':
       case 'hot_seat':
         // Award points to players who answered
-        for (const playerId of Object.keys(answers)) {
-          await awardPoints(playerId, POINTS_CONFIG.QUESTION_ANSWERED);
+        for (const odplayerId of Object.keys(answers)) {
+          await awardPoints(odplayerId, POINTS_CONFIG.QUESTION_ANSWERED);
         }
         break;
 
@@ -199,12 +207,12 @@ export async function handleAdvanceRound(
         // Find winner(s)
         let maxVotes = 0;
         let winners: string[] = [];
-        for (const [playerId, count] of Object.entries(voteCounts)) {
+        for (const [odplayerId, count] of Object.entries(voteCounts)) {
           if (count > maxVotes) {
             maxVotes = count;
-            winners = [playerId];
+            winners = [odplayerId];
           } else if (count === maxVotes) {
-            winners.push(playerId);
+            winners.push(odplayerId);
           }
         }
 
@@ -229,11 +237,30 @@ export async function handleAdvanceRound(
     }
   }
 
-  // Show results phase
+  // Change phase to showing_results (this stays until host clicks "Siguiente")
   await updateSessionPhase(sessionId, 'showing_results');
+  console.log('[handleShowResults] Phase changed to showing_results');
+
+  return { success: true };
+}
+
+/**
+ * Handle advancing to next round (called by host from results screen)
+ */
+export async function handleAdvanceRound(
+  roomId: string,
+  sessionId: string
+): Promise<AdvanceRoundState> {
+  console.log('[handleAdvanceRound] Starting...', { roomId, sessionId });
+
+  const session = await getGameSessionByRoomId(roomId);
+  if (!session.data) {
+    return { success: false, error: 'Sesión no encontrada' };
+  }
 
   // Advance to next round
   const advanceResult = await advanceToNextRound(sessionId);
+  console.log('[handleAdvanceRound] Advance result:', advanceResult);
 
   if (advanceResult.isGameOver) {
     // End the game
@@ -263,13 +290,14 @@ export async function handleAdvanceRound(
     return { success: false, error: 'No hay más contenido' };
   }
 
-  // Set new round content
+  // Set new round content (this also sets phase back to showing_question)
   await setRoundContent(
     sessionId,
     contentResult.data,
     configResult.data.timePerRound
   );
 
+  console.log('[handleAdvanceRound] SUCCESS - moved to next round');
   return { success: true, isGameOver: false };
 }
 

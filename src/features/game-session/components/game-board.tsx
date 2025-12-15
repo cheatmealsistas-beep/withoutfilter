@@ -104,8 +104,9 @@ export function GameBoard({
     formData.append('locale', locale);
     formData.append('roomCode', gameState.roomCode);
 
-    const { advanceRoundAction } = await import('../game-session.actions');
-    await advanceRoundAction(formData);
+    // This only changes phase to showing_results - does NOT advance round
+    const { showResultsAction } = await import('../game-session.actions');
+    await showResultsAction(formData);
     setIsAdvancing(false);
   };
 

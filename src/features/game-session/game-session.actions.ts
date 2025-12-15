@@ -12,6 +12,7 @@ import {
   handleStartGame,
   handleSubmitAnswer,
   handleSubmitVote,
+  handleShowResults,
   handleAdvanceRound,
   getGameState,
   getGameResults,
@@ -82,7 +83,29 @@ export async function submitVoteAction(
 }
 
 /**
+ * Server Action: Show results (calculate points, change phase)
+ * Called when host clicks "Ver Resultados"
+ */
+export async function showResultsAction(
+  formData: FormData
+): Promise<{ success: boolean; error?: string }> {
+  const roomId = formData.get('roomId') as string;
+  const sessionId = formData.get('sessionId') as string;
+  const locale = (formData.get('locale') as string) || 'es';
+  const roomCode = formData.get('roomCode') as string;
+
+  const result = await handleShowResults(roomId, sessionId);
+
+  if (result.success) {
+    revalidatePath(`/${locale}/game/${roomCode}/play`);
+  }
+
+  return result;
+}
+
+/**
  * Server Action: Advance to next round
+ * Called when host clicks "Siguiente ronda" from results screen
  */
 export async function advanceRoundAction(
   formData: FormData
