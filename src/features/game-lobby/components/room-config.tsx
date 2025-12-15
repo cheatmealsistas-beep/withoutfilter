@@ -56,14 +56,14 @@ export function RoomConfig({ config, onChange, disabled }: RoomConfigProps) {
         <Label>Categorías</Label>
         <div className="space-y-2">
           {brand.game.categories.map((category) => (
-            <div
+            <label
               key={category}
+              htmlFor={`config-category-${category}`}
               className={`flex items-center space-x-3 p-3 rounded-lg border cursor-pointer transition-all ${
                 localConfig.categories.includes(category)
                   ? 'border-primary bg-primary/5'
                   : 'border-border hover:border-primary/50'
               } ${disabled ? 'opacity-50 pointer-events-none' : ''}`}
-              onClick={() => !disabled && toggleCategory(category)}
             >
               <Checkbox
                 id={`config-category-${category}`}
@@ -72,17 +72,14 @@ export function RoomConfig({ config, onChange, disabled }: RoomConfigProps) {
                 onCheckedChange={() => toggleCategory(category)}
               />
               <div className="flex-1">
-                <label
-                  htmlFor={`config-category-${category}`}
-                  className="font-medium cursor-pointer"
-                >
+                <span className="font-medium cursor-pointer">
                   {brand.game.categoryNames[category]}
-                </label>
+                </span>
                 <p className="text-sm text-muted-foreground">
                   {brand.game.categoryDescriptions[category]}
                 </p>
               </div>
-            </div>
+            </label>
           ))}
         </div>
       </div>

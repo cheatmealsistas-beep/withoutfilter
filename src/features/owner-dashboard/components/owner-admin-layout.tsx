@@ -93,7 +93,7 @@ export function OwnerAdminLayout({
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
-  const SidebarContent = () => (
+  const sidebarContent = (
     <>
       {/* Site Selector */}
       <SiteSelector currentOrg={currentOrg} organizations={organizations} />
@@ -158,8 +158,10 @@ export function OwnerAdminLayout({
 
       {/* Mobile Sidebar Overlay */}
       {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50 md:hidden"
+        <button
+          type="button"
+          aria-label="Cerrar menú"
+          className="fixed inset-0 z-50 bg-black/50 md:hidden cursor-default"
           onClick={closeMobileMenu}
         />
       )}
@@ -181,12 +183,12 @@ export function OwnerAdminLayout({
             <X className="h-5 w-5" />
           </Button>
         </div>
-        <SidebarContent />
+        {sidebarContent}
       </aside>
 
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 border-r bg-background flex-col">
-        <SidebarContent />
+        {sidebarContent}
       </aside>
 
       {/* Main Content */}
