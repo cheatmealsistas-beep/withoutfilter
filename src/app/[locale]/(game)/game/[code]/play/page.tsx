@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { brand } from '@/shared/config/brand';
 import { getRoomWithPlayers } from '@/features/game-lobby';
+import { getGameState, GameBoard } from '@/features/game-session';
 
 export const metadata: Metadata = {
   title: `Jugando | ${brand.name}`,
@@ -21,48 +23,54 @@ export default async function PlayPage({ params }: PlayPageProps) {
     notFound();
   }
 
-  // TODO: Implement game session feature
-  // For now, show a placeholder
+  // If room is not playing, redirect to lobby
+  if (room.status === 'waiting') {
+    redirect(`/${locale}/game/${code}`);
+  }
 
-  return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
-      <div className="max-w-md w-full text-center space-y-6">
-        <div className="text-6xl">🎮</div>
-        <h1 className="text-3xl font-bold">Partida en curso</h1>
-        <p className="text-muted-foreground">
-          Sala: <span className="font-mono font-bold">{code}</span>
-        </p>
-        <p className="text-muted-foreground">
-          {room.players.length} jugadores conectados
-        </p>
+  // If room is finished, redirect to results
+  if (room.status === 'finished') {
+    redirect(`/${locale}/game/${code}/results`);
+  }
 
-        {/* Placeholder for game content */}
-        <div className="bg-card rounded-xl p-8 border">
-          <p className="text-lg">
-            El motor de juego está en desarrollo.
-            <br />
-            <span className="text-sm text-muted-foreground">
-              Próximamente: preguntas, retos y votaciones
-            </span>
+  // Get current player from cookie
+  const cookieStore = await cookies();
+  const playerIdCookie = cookieStore.get(`player_${code}`);
+
+  if (!playerIdCookie?.value) {
+    redirect(`/${locale}/game/join?code=${code}`);
+  }
+
+  const currentPlayer = room.players.find((p) => p.id === playerIdCookie.value);
+
+  if (!currentPlayer) {
+    redirect(`/${locale}/game/join?code=${code}`);
+  }
+
+  // Get game state
+  const gameState = await getGameState(room.id, currentPlayer.id);
+
+  if (!gameState) {
+    // Game session not started yet, wait
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <div className="max-w-md w-full text-center space-y-6">
+          <div className="text-6xl animate-pulse">🎲</div>
+          <h1 className="text-2xl font-bold">Preparando partida...</h1>
+          <p className="text-muted-foreground">
+            El juego comenzará en breve
           </p>
         </div>
-
-        {/* Players */}
-        <div className="flex flex-wrap gap-2 justify-center">
-          {room.players.map((player) => (
-            <div
-              key={player.id}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted"
-            >
-              <span>{player.avatar_emoji}</span>
-              <span className="text-sm font-medium">{player.display_name}</span>
-              <span className="text-xs text-muted-foreground">
-                {player.score} pts
-              </span>
-            </div>
-          ))}
-        </div>
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <GameBoard
+      roomId={room.id}
+      playerId={currentPlayer.id}
+      initialGameState={gameState}
+      locale={locale}
+    />
   );
 }

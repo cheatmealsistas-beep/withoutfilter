@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { Button } from '@/shared/components/ui/button';
@@ -13,6 +13,7 @@ import {
   kickPlayerAction,
   updateConfigAction,
 } from '../game-lobby.actions';
+import { startGameAction } from '@/features/game-session/game-session.actions';
 import { usePlayersRealtime } from '../hooks/use-room-presence';
 import type { Room, Player, RoomConfig as RoomConfigType } from '../types';
 import { brand } from '@/shared/config/brand';
@@ -27,6 +28,9 @@ export function RoomLobby({ room, currentPlayer }: RoomLobbyProps) {
   const router = useRouter();
   const players = usePlayersRealtime(room.id);
   const [isUpdating, setIsUpdating] = useState(false);
+
+  const [isStarting, setIsStarting] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
 
   const isHost = currentPlayer.is_host;
   const allReady = players.length > 0 && players.every((p) => p.is_ready);
@@ -86,7 +90,25 @@ export function RoomLobby({ room, currentPlayer }: RoomLobbyProps) {
   };
 
   // Handle start game
-  const handleStartGame = () => {
+  const handleStartGame = async () => {
+    setIsStarting(true);
+    setStartError(null);
+
+    const formData = new FormData();
+    formData.append('roomId', room.id);
+    formData.append('hostPlayerId', currentPlayer.id);
+    formData.append('roomCode', room.code);
+    formData.append('locale', locale);
+
+    const result = await startGameAction(formData);
+
+    if (!result.success) {
+      setStartError(result.error || 'Error al iniciar la partida');
+      setIsStarting(false);
+      return;
+    }
+
+    // Redirect to play page
     router.push(`/${locale}/game/${room.code}/play`);
   };
 
@@ -140,6 +162,11 @@ export function RoomLobby({ room, currentPlayer }: RoomLobbyProps) {
               ¡Todos listos! Puedes empezar la partida
             </p>
           )}
+          {startError && (
+            <p className="text-sm text-red-600 font-medium">
+              {startError}
+            </p>
+          )}
         </div>
 
         {/* Action Buttons */}
@@ -150,9 +177,9 @@ export function RoomLobby({ room, currentPlayer }: RoomLobbyProps) {
               onClick={handleStartGame}
               size="lg"
               className="w-full text-lg"
-              disabled={!canStart}
+              disabled={!canStart || isStarting}
             >
-              {canStart ? 'Empezar Partida' : 'Esperando jugadores...'}
+              {isStarting ? 'Iniciando...' : canStart ? 'Empezar Partida' : 'Esperando jugadores...'}
             </Button>
           ) : (
             <Button
