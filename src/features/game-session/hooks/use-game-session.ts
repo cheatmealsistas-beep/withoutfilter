@@ -21,6 +21,7 @@ export function useGameSession({
   // Subscribe to game session changes
   useEffect(() => {
     const supabase = createClientBrowser();
+    console.log('[useGameSession] Setting up realtime for room:', roomId);
 
     const channel = supabase
       .channel(`game-session:${roomId}`)
@@ -33,6 +34,7 @@ export function useGameSession({
           filter: `room_id=eq.${roomId}`,
         },
         (payload) => {
+          console.log('[useGameSession] game_sessions event:', payload.eventType, payload);
           if (payload.new) {
             const session = payload.new as GameSession;
 
@@ -50,11 +52,17 @@ export function useGameSession({
                 timeRemaining = Math.max(0, Math.floor((endsAt - now) / 1000));
               }
 
+              // Find hot seat player from current players
+              const hotSeatPlayer = prev.players.find(
+                (p) => p.id === session.current_player_id
+              ) || prev.hotSeatPlayer;
+
               return {
                 ...prev,
                 currentRound: session.current_round,
                 phase: session.phase || 'showing_question',
                 content: session.current_content,
+                hotSeatPlayer,
                 timeRemaining,
                 answers: Object.fromEntries(
                   Object.entries(answers || {}).map(([k, v]) => [k, v.answer])
@@ -75,14 +83,18 @@ export function useGameSession({
           table: 'game_players',
           filter: `room_id=eq.${roomId}`,
         },
-        () => {
+        (payload) => {
+          console.log('[useGameSession] game_players event:', payload.eventType, payload);
           // Refresh players on score updates
           refreshPlayers();
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('[useGameSession] Subscription status:', status);
+      });
 
     return () => {
+      console.log('[useGameSession] Cleaning up realtime');
       supabase.removeChannel(channel);
     };
   }, [roomId, playerId]);

@@ -71,6 +71,7 @@ export default async function PlayPage({ params }: PlayPageProps) {
       playerId={currentPlayer.id}
       initialGameState={gameState}
       locale={locale}
+      isHost={currentPlayer.is_host}
     />
   );
 }

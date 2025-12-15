@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { PlayerInGame } from '../types';
 
 type VotingPanelProps = {
   players: PlayerInGame[];
   currentPlayerId: string;
-  onVote: (targetPlayerId: string) => void;
+  onVote: (targetPlayerId: string) => Promise<void> | void;
   hasVoted: boolean;
   votes: Record<string, string>;
   showResults?: boolean;
@@ -25,6 +25,13 @@ export function VotingPanel({
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Reset submitting state when hasVoted changes
+  useEffect(() => {
+    if (hasVoted) {
+      setIsSubmitting(false);
+    }
+  }, [hasVoted]);
+
   // For challenges, show "Completed" / "Not completed" options
   if (isChallenge) {
     const completedVotes = Object.values(votes).filter((v) => v === 'completed').length;
@@ -39,10 +46,10 @@ export function VotingPanel({
 
         <div className="grid grid-cols-2 gap-4">
           <button
-            onClick={() => {
-              if (!hasVoted) {
+            onClick={async () => {
+              if (!hasVoted && !isSubmitting) {
                 setIsSubmitting(true);
-                onVote('completed');
+                await onVote('completed');
               }
             }}
             disabled={hasVoted || isSubmitting}
@@ -64,10 +71,10 @@ export function VotingPanel({
           </button>
 
           <button
-            onClick={() => {
-              if (!hasVoted) {
+            onClick={async () => {
+              if (!hasVoted && !isSubmitting) {
                 setIsSubmitting(true);
-                onVote('not_completed');
+                await onVote('not_completed');
               }
             }}
             disabled={hasVoted || isSubmitting}
@@ -107,10 +114,10 @@ export function VotingPanel({
     voteCount[targetId] = (voteCount[targetId] || 0) + 1;
   }
 
-  const handleSubmit = () => {
-    if (selectedPlayer && !hasVoted) {
+  const handleSubmit = async () => {
+    if (selectedPlayer && !hasVoted && !isSubmitting) {
       setIsSubmitting(true);
-      onVote(selectedPlayer);
+      await onVote(selectedPlayer);
     }
   };
 

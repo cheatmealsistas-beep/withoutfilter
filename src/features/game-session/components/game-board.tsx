@@ -15,6 +15,7 @@ type GameBoardProps = {
   playerId: string;
   initialGameState: GameState;
   locale: string;
+  isHost: boolean;
 };
 
 export function GameBoard({
@@ -22,6 +23,7 @@ export function GameBoard({
   playerId,
   initialGameState,
   locale,
+  isHost,
 }: GameBoardProps) {
   const { gameState, refreshGameState } = useGameSession({
     roomId,
@@ -32,8 +34,9 @@ export function GameBoard({
   const [showingQuestion, setShowingQuestion] = useState(
     gameState?.phase === 'showing_question'
   );
+  const [isAdvancing, setIsAdvancing] = useState(false);
 
-  // Handle phase transitions
+  // Handle phase transitions - only for showing_question -> answering
   useEffect(() => {
     if (!gameState) return;
 
@@ -91,9 +94,10 @@ export function GameBoard({
     await submitVoteAction(formData);
   };
 
-  const handleNextRound = async () => {
-    if (!gameState) return;
+  const handleShowResults = async () => {
+    if (!gameState || !isHost) return;
 
+    setIsAdvancing(true);
     const formData = new FormData();
     formData.append('roomId', roomId);
     formData.append('sessionId', gameState.sessionId);
@@ -102,6 +106,22 @@ export function GameBoard({
 
     const { advanceRoundAction } = await import('../game-session.actions');
     await advanceRoundAction(formData);
+    setIsAdvancing(false);
+  };
+
+  const handleNextRound = async () => {
+    if (!gameState || !isHost) return;
+
+    setIsAdvancing(true);
+    const formData = new FormData();
+    formData.append('roomId', roomId);
+    formData.append('sessionId', gameState.sessionId);
+    formData.append('locale', locale);
+    formData.append('roomCode', gameState.roomCode);
+
+    const { advanceRoundAction } = await import('../game-session.actions');
+    await advanceRoundAction(formData);
+    setIsAdvancing(false);
   };
 
   if (!gameState) {
@@ -131,12 +151,18 @@ export function GameBoard({
             <RoundTimer
               initialTime={gameState.timeRemaining}
               size="sm"
-              onTimeUp={handleNextRound}
             />
           )}
 
-          <div className="text-sm font-medium">
-            {gameState.roomCode}
+          <div className="flex items-center gap-2">
+            {isHost && (
+              <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                Host
+              </span>
+            )}
+            <span className="text-sm font-medium">
+              {gameState.roomCode}
+            </span>
           </div>
         </div>
       </header>
@@ -179,6 +205,11 @@ export function GameBoard({
                   <p className="text-muted-foreground">
                     Esperando la respuesta de {gameState.hotSeatPlayer?.display_name}...
                   </p>
+                  {gameState.hasAnswered && (
+                    <p className="text-sm text-green-600 mt-2">
+                      ¡{gameState.hotSeatPlayer?.display_name} ya respondió!
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -246,13 +277,35 @@ export function GameBoard({
                   </p>
                 </div>
               )}
+
+              {/* Host button to show results */}
+              {isHost && (
+                <div className="text-center mt-8">
+                  <button
+                    onClick={handleShowResults}
+                    disabled={isAdvancing}
+                    className="py-3 px-8 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  >
+                    {isAdvancing ? 'Cargando...' : 'Ver Resultados'}
+                  </button>
+                </div>
+              )}
+
+              {/* Non-host waiting message */}
+              {!isHost && (
+                <div className="text-center mt-8">
+                  <p className="text-sm text-muted-foreground">
+                    Esperando a que el host muestre los resultados...
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
-          {/* Results phase */}
+          {/* Results phase - stays until host clicks next */}
           {gameState.phase === 'showing_results' && (
             <div className="text-center py-8 space-y-6">
-              <h2 className="text-2xl font-bold">Resultados de la ronda</h2>
+              <h2 className="text-2xl font-bold">🎉 Resultados</h2>
 
               {content?.type === 'group_vote' && (
                 <VotingPanel
@@ -265,25 +318,50 @@ export function GameBoard({
                 />
               )}
 
-              {content?.type === 'question' && gameState.answers[gameState.hotSeatPlayer?.id || ''] && (
+              {content?.type === 'question' && (
                 <div className="p-6 rounded-xl bg-card border max-w-md mx-auto">
                   <p className="text-sm text-muted-foreground mb-2">
                     {gameState.hotSeatPlayer?.display_name} respondió:
                   </p>
                   <p className="text-xl font-medium">
-                    &ldquo;{gameState.answers[gameState.hotSeatPlayer?.id || '']}&rdquo;
+                    {gameState.answers[gameState.hotSeatPlayer?.id || '']
+                      ? `"${gameState.answers[gameState.hotSeatPlayer?.id || '']}"`
+                      : '(Sin respuesta)'}
                   </p>
                 </div>
               )}
 
-              <button
-                onClick={handleNextRound}
-                className="py-3 px-8 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                {gameState.currentRound >= gameState.totalRounds
-                  ? 'Ver resultados finales'
-                  : 'Siguiente ronda'}
-              </button>
+              {content?.type === 'confession' && (
+                <div className="p-6 rounded-xl bg-card border max-w-md mx-auto">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {gameState.hotSeatPlayer?.display_name} confesó:
+                  </p>
+                  <p className="text-xl font-medium">
+                    {gameState.answers[gameState.hotSeatPlayer?.id || '']
+                      ? `"${gameState.answers[gameState.hotSeatPlayer?.id || '']}"`
+                      : '(Sin confesión)'}
+                  </p>
+                </div>
+              )}
+
+              {/* Only host can advance */}
+              {isHost ? (
+                <button
+                  onClick={handleNextRound}
+                  disabled={isAdvancing}
+                  className="py-3 px-8 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                >
+                  {isAdvancing
+                    ? 'Cargando...'
+                    : gameState.currentRound >= gameState.totalRounds
+                      ? 'Ver resultados finales'
+                      : 'Siguiente ronda →'}
+                </button>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Esperando a que el host continúe...
+                </p>
+              )}
             </div>
           )}
         </div>
