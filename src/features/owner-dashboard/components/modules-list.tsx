@@ -16,6 +16,7 @@ import {
   Globe,
   Lock,
   Pencil,
+  Navigation,
 } from 'lucide-react';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Switch } from '@/shared/components/ui/switch';
@@ -23,6 +24,7 @@ import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { toggleModuleAction } from '../owner-dashboard.actions';
 import { isEditableModule } from '@/features/page-builder';
+import { ModuleSettingsSheet } from './module-settings-sheet';
 
 // Module configuration with icons and labels
 const moduleConfig: Record<
@@ -85,6 +87,10 @@ interface Module {
   isEnabled: boolean;
   isPublic?: boolean;
   displayOrder: number;
+  customLabel: string | null;
+  showInNavbar: boolean;
+  showInFooter: boolean;
+  customSlug: string | null;
 }
 
 interface ModulesListProps {
@@ -146,6 +152,7 @@ export function ModulesList({ modules, slug }: ModulesListProps) {
 
         const Icon = config.icon;
         const isDisabled = isPending || (!config.canDisable && module.isEnabled);
+        const displayLabel = module.customLabel || config.label;
 
         return (
           <Card
@@ -178,8 +185,13 @@ export function ModulesList({ modules, slug }: ModulesListProps) {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium">{config.label}</h3>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-medium">{displayLabel}</h3>
+                    {module.customLabel && (
+                      <Badge variant="outline" className="text-xs">
+                        {config.label}
+                      </Badge>
+                    )}
                     {module.isEnabled && (
                       <Badge
                         variant="outline"
@@ -204,13 +216,37 @@ export function ModulesList({ modules, slug }: ModulesListProps) {
                       </Badge>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground truncate">
-                    {config.description}
-                  </p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span className="truncate">{config.description}</span>
+                    {module.isEnabled && (module.showInNavbar || module.showInFooter) && (
+                      <span className="flex items-center gap-1 text-xs shrink-0">
+                        <Navigation className="h-3 w-3" />
+                        {module.showInNavbar && module.showInFooter
+                          ? 'Nav + Footer'
+                          : module.showInNavbar
+                          ? 'Navbar'
+                          : 'Footer'}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  {/* Settings button - only for enabled modules (not home) */}
+                  {module.isEnabled && module.type !== 'home' && (
+                    <ModuleSettingsSheet
+                      slug={slug}
+                      moduleType={module.type}
+                      moduleLabel={config.label}
+                      currentSettings={{
+                        customLabel: module.customLabel,
+                        showInNavbar: module.showInNavbar,
+                        showInFooter: module.showInFooter,
+                      }}
+                    />
+                  )}
+
                   {/* Edit button - only for editable modules when enabled */}
                   {module.isEnabled && isEditableModule(module.type) && (
                     <Button

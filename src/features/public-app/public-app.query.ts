@@ -207,10 +207,15 @@ export async function getEnabledModules(
   organizationId: string
 ): Promise<{
   data: Array<{
+    id: string;
     type: string;
     isEnabled: boolean;
     isPublic: boolean;
     displayOrder: number;
+    customLabel: string | null;
+    showInNavbar: boolean;
+    showInFooter: boolean;
+    customSlug: string | null;
   }> | null;
   error: string | null;
 }> {
@@ -219,7 +224,7 @@ export async function getEnabledModules(
   // Get enabled modules from app_modules
   const { data, error } = await supabase
     .from('app_modules')
-    .select('type, is_enabled, is_public, display_order')
+    .select('id, type, is_enabled, is_public, display_order, custom_label, show_in_navbar, show_in_footer, custom_slug')
     .eq('organization_id', organizationId)
     .eq('is_enabled', true)
     .order('display_order', { ascending: true });
@@ -229,10 +234,15 @@ export async function getEnabledModules(
   }
 
   const modules = (data || []).map((m) => ({
+    id: m.id,
     type: m.type,
     isEnabled: m.is_enabled ?? false,
     isPublic: m.is_public ?? true,
     displayOrder: m.display_order ?? 0,
+    customLabel: m.custom_label ?? null,
+    showInNavbar: m.show_in_navbar ?? true,
+    showInFooter: m.show_in_footer ?? false,
+    customSlug: m.custom_slug ?? null,
   }));
 
   // Check if courses module exists in the list
@@ -249,10 +259,15 @@ export async function getEnabledModules(
     // If there are published courses, add the courses module dynamically
     if (count && count > 0) {
       modules.push({
+        id: 'dynamic-courses',
         type: 'courses',
         isEnabled: true,
         isPublic: true,
         displayOrder: 10,
+        customLabel: null,
+        showInNavbar: true,
+        showInFooter: false,
+        customSlug: null,
       });
       // Sort by display order
       modules.sort((a, b) => a.displayOrder - b.displayOrder);
@@ -261,6 +276,46 @@ export async function getEnabledModules(
 
   return {
     data: modules,
+    error: null,
+  };
+}
+
+/**
+ * Get a custom page module by its slug
+ */
+export async function getCustomPageBySlug(
+  organizationId: string,
+  customSlug: string
+): Promise<{
+  data: {
+    id: string;
+    type: string;
+    customLabel: string | null;
+    content: Record<string, unknown> | null;
+  } | null;
+  error: string | null;
+}> {
+  const supabase = createAdminClient();
+
+  const { data: module, error } = await supabase
+    .from('app_modules')
+    .select('id, type, custom_label, content')
+    .eq('organization_id', organizationId)
+    .eq('custom_slug', customSlug)
+    .eq('is_enabled', true)
+    .maybeSingle();
+
+  if (error || !module) {
+    return { data: null, error: error?.message ?? 'Page not found' };
+  }
+
+  return {
+    data: {
+      id: module.id,
+      type: module.type,
+      customLabel: module.custom_label,
+      content: module.content as Record<string, unknown> | null,
+    },
     error: null,
   };
 }

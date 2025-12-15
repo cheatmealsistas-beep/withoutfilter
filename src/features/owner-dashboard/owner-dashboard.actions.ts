@@ -8,6 +8,7 @@ import {
   handleToggleModule,
   handleSetModulePublic,
   handleReorderModules,
+  handleUpdateModuleSettings,
 } from './owner-dashboard.handler';
 
 function createAdminClient() {
@@ -215,6 +216,45 @@ export async function reorderModulesAction(
   if (result.success) {
     revalidatePath(`/app/${slug}`);
     revalidatePath(`/app/${slug}/admin/modules`);
+  }
+
+  return {
+    success: result.success,
+    error: result.error || undefined,
+  };
+}
+
+/**
+ * Update module settings (custom label, navbar/footer visibility)
+ */
+export async function updateModuleSettingsAction(
+  slug: string,
+  moduleType: string,
+  settings: {
+    customLabel?: string | null;
+    showInNavbar?: boolean;
+    showInFooter?: boolean;
+  }
+): Promise<ActionResult> {
+  const user = await getUser();
+  if (!user) {
+    return { success: false, error: 'No autenticado' };
+  }
+
+  const result = await handleUpdateModuleSettings(user.id, slug, {
+    type: moduleType,
+    ...settings,
+  });
+
+  if (result.success) {
+    // Revalidate all paths that show navigation
+    revalidatePath(`/app/${slug}`);
+    revalidatePath(`/app/${slug}/admin`);
+    revalidatePath(`/app/${slug}/admin/modules`);
+    revalidatePath(`/app/${slug}/about`);
+    revalidatePath(`/app/${slug}/contact`);
+    revalidatePath(`/app/${slug}/services`);
+    revalidatePath(`/app/${slug}/courses`);
   }
 
   return {

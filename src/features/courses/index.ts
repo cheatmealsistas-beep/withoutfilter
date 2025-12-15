@@ -21,6 +21,7 @@ export {
   getCourseEnrollments,
   getUserEnrollment,
   getUserEnrollments,
+  getStudentEnrollmentsForOrg,
   hasActiveEnrollment,
   isCourseSlugAvailable,
   isLessonSlugAvailable,

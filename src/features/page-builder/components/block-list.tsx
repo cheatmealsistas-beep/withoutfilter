@@ -21,6 +21,8 @@ interface BlockListProps {
   onBlockMove: (blockId: string, direction: 'up' | 'down') => void;
   onBlockDelete: (blockId: string) => void;
   onBlockAdd: (type: BlockType) => void;
+  expandedBlockId?: string | null;
+  onExpandBlock?: (blockId: string | null) => void;
 }
 
 export function BlockList({
@@ -30,11 +32,17 @@ export function BlockList({
   onBlockMove,
   onBlockDelete,
   onBlockAdd,
+  expandedBlockId,
+  onExpandBlock,
 }: BlockListProps) {
   // Track which block is expanded (only one at a time)
-  const [expandedId, setExpandedId] = useState<string | null>(
+  // Use controlled state if provided, otherwise use internal state
+  const [internalExpandedId, setInternalExpandedId] = useState<string | null>(
     blocks.length > 0 ? blocks[0].id : null
   );
+
+  const expandedId = expandedBlockId !== undefined ? expandedBlockId : internalExpandedId;
+  const setExpandedId = onExpandBlock || setInternalExpandedId;
 
   const renderBlockEditor = useCallback(
     (block: PageBlock) => {
@@ -65,8 +73,8 @@ export function BlockList({
   );
 
   const handleToggleExpand = useCallback((blockId: string) => {
-    setExpandedId((prev) => (prev === blockId ? null : blockId));
-  }, []);
+    setExpandedId(expandedId === blockId ? null : blockId);
+  }, [expandedId, setExpandedId]);
 
   return (
     <div className="space-y-3">

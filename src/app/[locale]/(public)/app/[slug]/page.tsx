@@ -78,7 +78,7 @@ export default async function PublicAppPage({ params }: PublicAppPageProps) {
         </main>
 
         {/* Footer */}
-        <PublicFooter app={app} />
+        <PublicFooter app={app} enabledModules={enabledModules || []} locale={locale} />
       </div>
     );
   }
@@ -114,7 +114,7 @@ export default async function PublicAppPage({ params }: PublicAppPageProps) {
       </main>
 
       {/* Footer */}
-      <PublicFooter app={app} />
+      <PublicFooter app={app} enabledModules={enabledModules || []} locale={locale} />
     </div>
   );
 }

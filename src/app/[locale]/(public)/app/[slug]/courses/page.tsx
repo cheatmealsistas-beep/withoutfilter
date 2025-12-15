@@ -146,7 +146,7 @@ export default async function PublicCoursesPage({ params }: CoursesPageProps) {
       </main>
 
       {/* Footer */}
-      <PublicFooter app={app} />
+      <PublicFooter app={app} enabledModules={enabledModules || []} locale={locale} />
     </div>
   );
 }

@@ -1,0 +1,41 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NEXT_TELEMETRY_DISABLED = "1"
+  NEXT_PUBLIC_SUPABASE_URL = "https://duluwcxuwudjlpeyvehv.supabase.co"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1bHV3Y3h1d3VkamxwZXl2ZWh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU3NzMxMDksImV4cCI6MjA4MTM0OTEwOX0.4eSsbFkzddIw99_0AhtPBs3QIyt3Kmy2mPoxObxnhD0"
+  NEXT_PUBLIC_APP_URL = "https://withoutfilter.netlify.app"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Headers for security and Supabase Realtime
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirects
+[[redirects]]
+  from = "/"
+  to = "/es"
+  status = 302
+  force = false
+  conditions = {Language = ["es"]}
+
+[[redirects]]
+  from = "/"
+  to = "/en"
+  status = 302
+  force = false

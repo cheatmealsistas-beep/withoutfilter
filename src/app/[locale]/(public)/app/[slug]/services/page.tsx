@@ -83,7 +83,7 @@ export default async function PublicServicesPage({ params }: ServicesPageProps) 
         )}
       </main>
 
-      <PublicFooter app={app} />
+      <PublicFooter app={app} enabledModules={enabledModules || []} locale={locale} />
     </div>
   );
 }

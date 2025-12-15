@@ -5,31 +5,35 @@ import Link from 'next/link';
 import { Menu } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
-import type { PublicApp } from '../types';
+import type { PublicApp, EnabledModule } from '../types';
 
-// Module type to route and label mapping
-const moduleConfig: Record<
-  string,
-  { path: string; label: string; labelEs: string }
-> = {
-  home: { path: '', label: 'Home', labelEs: 'Inicio' },
-  courses: { path: '/courses', label: 'Courses', labelEs: 'Cursos' },
-  about: { path: '/about', label: 'About', labelEs: 'Sobre mi' },
-  services: { path: '/services', label: 'Services', labelEs: 'Servicios' },
-  testimonials: { path: '/testimonials', label: 'Testimonials', labelEs: 'Testimonios' },
-  blog: { path: '/blog', label: 'Blog', labelEs: 'Blog' },
-  contact: { path: '/contact', label: 'Contact', labelEs: 'Contacto' },
-  resources: { path: '/resources', label: 'Resources', labelEs: 'Recursos' },
+// Default labels per module type (used when no custom_label is set)
+const defaultLabels: Record<string, { en: string; es: string }> = {
+  home: { en: 'Home', es: 'Inicio' },
+  courses: { en: 'Courses', es: 'Cursos' },
+  about: { en: 'About', es: 'Sobre mí' },
+  services: { en: 'Services', es: 'Servicios' },
+  testimonials: { en: 'Testimonials', es: 'Testimonios' },
+  blog: { en: 'Blog', es: 'Blog' },
+  contact: { en: 'Contact', es: 'Contacto' },
+  resources: { en: 'Resources', es: 'Recursos' },
+};
+
+// Default paths per module type
+const defaultPaths: Record<string, string> = {
+  home: '',
+  courses: '/courses',
+  about: '/about',
+  services: '/services',
+  testimonials: '/testimonials',
+  blog: '/blog',
+  contact: '/contact',
+  resources: '/resources',
 };
 
 interface PublicNavbarProps {
   app: PublicApp;
-  enabledModules: Array<{
-    type: string;
-    isEnabled: boolean;
-    isPublic: boolean;
-    displayOrder: number;
-  }>;
+  enabledModules: EnabledModule[];
   locale: string;
   isOwner?: boolean;
   /** Whether the edit bar is visible (owner viewing their app) */
@@ -45,14 +49,33 @@ export function PublicNavbar({
 }: PublicNavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Filter to only public modules that have routes configured (exclude home from nav links)
+  // Get the path for a module (custom slug for custom pages, default path for standard modules)
+  const getModulePath = (module: EnabledModule): string => {
+    if (module.type === 'custom' && module.customSlug) {
+      return `/${module.customSlug}`;
+    }
+    return defaultPaths[module.type] || '';
+  };
+
+  // Get the label for a module (custom label or default based on locale)
+  const getModuleLabel = (module: EnabledModule): string => {
+    if (module.customLabel) {
+      return module.customLabel;
+    }
+    const labels = defaultLabels[module.type];
+    if (!labels) return module.type;
+    return locale === 'es' ? labels.es : labels.en;
+  };
+
+  // Filter to only public modules that should show in navbar (exclude home)
   const navItems = enabledModules
-    .filter((m) => m.isPublic && moduleConfig[m.type] && m.type !== 'home')
+    .filter((m) => m.isPublic && m.showInNavbar && m.type !== 'home')
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .map((m) => ({
+      id: m.id,
       type: m.type,
-      path: moduleConfig[m.type].path,
-      label: locale === 'es' ? moduleConfig[m.type].labelEs : moduleConfig[m.type].label,
+      path: getModulePath(m),
+      label: getModuleLabel(m),
     }));
 
   const basePath = `/${locale}/app/${app.slug}`;
@@ -84,7 +107,7 @@ export function PublicNavbar({
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <Link
-                key={item.type}
+                key={item.id}
                 href={`${basePath}${item.path}`}
                 className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
               >
@@ -117,7 +140,7 @@ export function PublicNavbar({
                 <div className="flex flex-col gap-4 mt-8">
                   {navItems.map((item) => (
                     <Link
-                      key={item.type}
+                      key={item.id}
                       href={`${basePath}${item.path}`}
                       onClick={() => setMobileMenuOpen(false)}
                       className="px-4 py-3 text-lg font-medium hover:bg-muted rounded-lg transition-colors"

@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, PanelLeftClose, PanelLeft } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Button } from '@/shared/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 import { Label } from '@/shared/components/ui/label';
 import { Input } from '@/shared/components/ui/input';
+import { cn } from '@/shared/lib/utils';
 import { BlockList } from './block-list';
 import { SaveIndicator } from './shared/save-indicator';
 import { PublishButton } from './shared/publish-button';
@@ -40,6 +41,10 @@ export function PageBuilderEditor({
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [lastSaved, setLastSaved] = useState<Date | undefined>(undefined);
   const [hasChanges, setHasChanges] = useState(false);
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState(false);
+  const [expandedBlockId, setExpandedBlockId] = useState<string | null>(
+    initialContent.draft.blocks.length > 0 ? initialContent.draft.blocks[0].id : null
+  );
 
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -236,69 +241,92 @@ export function PageBuilderEditor({
       </div>
 
       {/* Desktop: Split View */}
-      <div className="hidden md:grid md:grid-cols-[400px_1fr] lg:grid-cols-[450px_1fr] min-h-[calc(100vh-3.5rem)]">
+      <div className="hidden md:flex min-h-[calc(100vh-3.5rem)]">
         {/* Left Panel: Editor */}
-        <div className="border-r overflow-y-auto p-6 space-y-6">
-          {/* Settings */}
-          <div className="space-y-4">
-            <h2 className="text-sm font-medium">🎨 Colores</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="primary-color">Principal</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="primary-color"
-                    type="color"
-                    value={settings.primaryColor}
-                    onChange={(e) => handleSettingsChange({ primaryColor: e.target.value })}
-                    className="w-12 h-9 p-1 cursor-pointer"
-                  />
-                  <Input
-                    value={settings.primaryColor}
-                    onChange={(e) => handleSettingsChange({ primaryColor: e.target.value })}
-                    className="flex-1 font-mono text-sm"
-                    maxLength={7}
-                  />
+        <div
+          className={cn(
+            'border-r overflow-y-auto transition-all duration-300 flex-shrink-0',
+            isPanelCollapsed ? 'w-0 p-0 overflow-hidden' : 'w-[400px] lg:w-[450px] p-6'
+          )}
+        >
+          <div className={cn('space-y-6', isPanelCollapsed && 'hidden')}>
+            {/* Settings */}
+            <div className="space-y-4">
+              <h2 className="text-sm font-medium">🎨 Colores</h2>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="primary-color">Principal</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="primary-color"
+                      type="color"
+                      value={settings.primaryColor}
+                      onChange={(e) => handleSettingsChange({ primaryColor: e.target.value })}
+                      className="w-12 h-9 p-1 cursor-pointer"
+                    />
+                    <Input
+                      value={settings.primaryColor}
+                      onChange={(e) => handleSettingsChange({ primaryColor: e.target.value })}
+                      className="flex-1 font-mono text-sm"
+                      maxLength={7}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="secondary-color">Secundario</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="secondary-color"
-                    type="color"
-                    value={settings.secondaryColor}
-                    onChange={(e) => handleSettingsChange({ secondaryColor: e.target.value })}
-                    className="w-12 h-9 p-1 cursor-pointer"
-                  />
-                  <Input
-                    value={settings.secondaryColor}
-                    onChange={(e) => handleSettingsChange({ secondaryColor: e.target.value })}
-                    className="flex-1 font-mono text-sm"
-                    maxLength={7}
-                  />
+                <div className="space-y-2">
+                  <Label htmlFor="secondary-color">Secundario</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="secondary-color"
+                      type="color"
+                      value={settings.secondaryColor}
+                      onChange={(e) => handleSettingsChange({ secondaryColor: e.target.value })}
+                      className="w-12 h-9 p-1 cursor-pointer"
+                    />
+                    <Input
+                      value={settings.secondaryColor}
+                      onChange={(e) => handleSettingsChange({ secondaryColor: e.target.value })}
+                      className="flex-1 font-mono text-sm"
+                      maxLength={7}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Blocks */}
-          <div className="space-y-4">
-            <h2 className="text-sm font-medium">📦 Bloques</h2>
-            <BlockList
-              blocks={blocks}
-              onBlockChange={handleBlockChange}
-              onBlockVisibilityChange={handleBlockVisibilityChange}
-              onBlockMove={handleBlockMove}
-              onBlockDelete={handleBlockDelete}
-              onBlockAdd={handleBlockAdd}
-            />
+            {/* Blocks */}
+            <div className="space-y-4">
+              <h2 className="text-sm font-medium">📦 Bloques</h2>
+              <BlockList
+                blocks={blocks}
+                onBlockChange={handleBlockChange}
+                onBlockVisibilityChange={handleBlockVisibilityChange}
+                onBlockMove={handleBlockMove}
+                onBlockDelete={handleBlockDelete}
+                onBlockAdd={handleBlockAdd}
+                expandedBlockId={expandedBlockId}
+                onExpandBlock={setExpandedBlockId}
+              />
+            </div>
           </div>
         </div>
 
         {/* Right Panel: Preview */}
-        <div className="bg-muted/30 overflow-y-auto">
-          <PagePreview blocks={blocks} settings={settings} />
+        <div className="flex-1 bg-muted/30 overflow-y-auto relative">
+          {/* Toggle Panel Button */}
+          <Button
+            variant="outline"
+            size="icon"
+            className="absolute top-4 left-4 z-10 bg-background shadow-md"
+            onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+            title={isPanelCollapsed ? 'Mostrar panel' : 'Ocultar panel'}
+          >
+            {isPanelCollapsed ? (
+              <PanelLeft className="h-4 w-4" />
+            ) : (
+              <PanelLeftClose className="h-4 w-4" />
+            )}
+          </Button>
+          <PagePreview blocks={blocks} settings={settings} activeBlockId={expandedBlockId} />
         </div>
       </div>
     </div>

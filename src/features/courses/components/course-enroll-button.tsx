@@ -30,7 +30,8 @@ export function CourseEnrollButton({
 
   const handleEnroll = async () => {
     if (!isAuthenticated) {
-      router.push(`/${locale}/login?redirect=/app/${orgSlug}/courses/${courseSlug}`);
+      // Redirect to app-specific login, not global login
+      router.push(`/${locale}/app/${orgSlug}/login?redirect=/courses/${courseSlug}`);
       return;
     }
 

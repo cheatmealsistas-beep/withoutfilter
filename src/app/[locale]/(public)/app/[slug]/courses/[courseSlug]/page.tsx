@@ -275,7 +275,7 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
       </main>
 
       {/* Footer */}
-      <PublicFooter app={app} />
+      <PublicFooter app={app} enabledModules={enabledModules || []} locale={locale} />
     </div>
   );
 }

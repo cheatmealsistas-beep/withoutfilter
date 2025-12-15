@@ -85,7 +85,7 @@ export default async function PublicAboutPage({ params }: AboutPageProps) {
         )}
       </main>
 
-      <PublicFooter app={app} />
+      <PublicFooter app={app} enabledModules={enabledModules || []} locale={locale} />
     </div>
   );
 }

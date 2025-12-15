@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { isOwnerOfOrganization, getOrganizationBySlug } from './owner-dashboard.query';
-import { toggleModule, setModulePublic, reorderModules } from './owner-dashboard.command';
+import { toggleModule, setModulePublic, reorderModules, updateModuleSettings } from './owner-dashboard.command';
 
 // Valid module types
 const moduleTypes = [
@@ -12,6 +12,7 @@ const moduleTypes = [
   'contact',
   'courses',
   'resources',
+  'custom',
 ] as const;
 
 // Validation schemas
@@ -28,9 +29,16 @@ const setModulePublicSchema = z.object({
 const reorderModulesSchema = z.array(
   z.object({
     type: z.enum(moduleTypes),
-    displayOrder: z.number().min(0).max(10),
+    displayOrder: z.number().min(0).max(20),
   })
 );
+
+const updateModuleSettingsSchema = z.object({
+  type: z.enum(moduleTypes),
+  customLabel: z.string().max(50).nullable().optional(),
+  showInNavbar: z.boolean().optional(),
+  showInFooter: z.boolean().optional(),
+});
 
 /**
  * Handle toggle module enabled/disabled
@@ -125,4 +133,43 @@ export async function handleReorderModules(
 
   // Reorder modules
   return reorderModules(org.id, validation.data);
+}
+
+/**
+ * Handle update module settings (custom label, navbar/footer visibility)
+ */
+export async function handleUpdateModuleSettings(
+  userId: string,
+  slug: string,
+  input: {
+    type: string;
+    customLabel?: string | null;
+    showInNavbar?: boolean;
+    showInFooter?: boolean;
+  }
+): Promise<{ success: boolean; error: string | null }> {
+  // Validate input
+  const validation = updateModuleSettingsSchema.safeParse(input);
+  if (!validation.success) {
+    return { success: false, error: validation.error.issues[0].message };
+  }
+
+  // Check ownership
+  const isOwner = await isOwnerOfOrganization(userId, slug);
+  if (!isOwner) {
+    return { success: false, error: 'No tienes permisos para modificar este módulo' };
+  }
+
+  // Get organization ID
+  const { data: org } = await getOrganizationBySlug(slug);
+  if (!org) {
+    return { success: false, error: 'Organización no encontrada' };
+  }
+
+  // Update settings
+  return updateModuleSettings(org.id, validation.data.type, {
+    customLabel: validation.data.customLabel,
+    showInNavbar: validation.data.showInNavbar,
+    showInFooter: validation.data.showInFooter,
+  });
 }

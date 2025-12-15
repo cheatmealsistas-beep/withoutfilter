@@ -25,6 +25,10 @@ export interface OwnerDashboardData {
     isEnabled: boolean;
     isPublic: boolean;
     displayOrder: number;
+    customLabel: string | null;
+    showInNavbar: boolean;
+    showInFooter: boolean;
+    customSlug: string | null;
   }>;
   trialEndsAt: string | null;
 }

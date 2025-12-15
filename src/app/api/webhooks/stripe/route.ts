@@ -33,6 +33,14 @@ function extractCancellationDetails(
 }
 
 export async function POST(req: Request) {
+  // Stripe is optional - if not configured, webhooks are disabled
+  if (!stripe) {
+    return NextResponse.json(
+      { error: 'Stripe is not configured' },
+      { status: 501 }
+    );
+  }
+
   const body = await req.text();
   const headersList = await headers();
   const signature = headersList.get('stripe-signature');

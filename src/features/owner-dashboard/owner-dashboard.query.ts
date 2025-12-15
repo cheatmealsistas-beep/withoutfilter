@@ -99,7 +99,7 @@ export async function getOwnerDashboardData(
   // Get modules for this organization
   const { data: modules } = await supabase
     .from('app_modules')
-    .select('id, type, is_enabled, is_public, display_order')
+    .select('id, type, is_enabled, is_public, display_order, custom_label, show_in_navbar, show_in_footer, custom_slug')
     .eq('organization_id', org.id)
     .order('display_order', { ascending: true });
 
@@ -140,6 +140,10 @@ export async function getOwnerDashboardData(
         isEnabled: m.is_enabled ?? false,
         isPublic: m.is_public ?? true,
         displayOrder: m.display_order ?? 0,
+        customLabel: m.custom_label ?? null,
+        showInNavbar: m.show_in_navbar ?? true,
+        showInFooter: m.show_in_footer ?? false,
+        customSlug: m.custom_slug ?? null,
       })),
       trialEndsAt: profile?.trial_ends_at || null,
     },

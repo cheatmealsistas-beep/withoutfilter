@@ -17,20 +17,20 @@ export const brand = {
   // ═══════════════════════════════════════════════════════════════════
 
   /** Your product/company name */
-  name: 'Modulary',
+  name: 'Without Filter',
 
   /** Short tagline (appears in hero, metadata) */
-  tagline: 'Build Apps Without Code',
+  tagline: 'El juego sin filtros para adultos',
 
   // ═══════════════════════════════════════════════════════════════════
   // CONTACT & URLS
   // ═══════════════════════════════════════════════════════════════════
 
   /** Production website URL (used for canonical URLs, sitemap, schemas) */
-  website: 'https://www.modulary.app',
+  website: 'https://withoutfilter.app',
 
   /** Support email address */
-  support: 'support@modulary.app',
+  support: 'hello@withoutfilter.app',
 
   // ═══════════════════════════════════════════════════════════════════
   // ASSETS (place files in /public/)
@@ -93,17 +93,17 @@ export const brand = {
 
   seo: {
     /** Title template for pages. %s is replaced with page title */
-    titleTemplate: '%s | AI SaaS',
+    titleTemplate: '%s | Without Filter',
 
     /** Default title when no page title is set */
-    defaultTitle: 'AI SaaS - Build faster with AI',
+    defaultTitle: 'Without Filter - El juego sin filtros para adultos',
 
     /** Default meta description (max 160 characters recommended) */
     defaultDescription:
-      'Production-ready AI SaaS boilerplate with Next.js, Supabase, and Stripe',
+      'Juego social multijugador para adultos. Preguntas incómodas, retos atrevidos y mucha diversión. Sin apps, sin descargas. Juega desde el móvil.',
 
     /** Keywords for meta tags (comma-separated) */
-    keywords: ['saas', 'boilerplate', 'nextjs', 'supabase', 'stripe'],
+    keywords: ['juego adultos', 'juego para fiestas', 'preguntas atrevidas', 'juego social', 'sin filtro', 'juego móvil'],
 
     /** Default Open Graph image (1200x630 recommended) */
     ogImage: '/og-image.png',
@@ -237,7 +237,42 @@ export const brand = {
   // ═══════════════════════════════════════════════════════════════════
 
   /** Copyright notice in footer */
-  copyright: `© ${new Date().getFullYear()} AI SaaS. All rights reserved.`,
+  copyright: `© ${new Date().getFullYear()} Without Filter. Todos los derechos reservados.`,
+
+  // ═══════════════════════════════════════════════════════════════════
+  // GAME-SPECIFIC CONFIG
+  // ═══════════════════════════════════════════════════════════════════
+
+  game: {
+    /** Minimum players to start a game */
+    minPlayers: 3,
+
+    /** Maximum players per room */
+    maxPlayers: 12,
+
+    /** Default rounds per game */
+    defaultRounds: 10,
+
+    /** Default time per round in seconds */
+    defaultTimePerRound: 30,
+
+    /** Available intensity categories */
+    categories: ['suave', 'atrevida', 'sin_filtro'] as const,
+
+    /** Category display names */
+    categoryNames: {
+      suave: 'Suave',
+      atrevida: 'Atrevida',
+      sin_filtro: 'Sin Filtro',
+    },
+
+    /** Category descriptions */
+    categoryDescriptions: {
+      suave: 'Preguntas divertidas para romper el hielo',
+      atrevida: 'Preguntas más picantes y personales',
+      sin_filtro: 'Sin límites. Solo para valientes',
+    },
+  },
 };
 
 export type Brand = typeof brand;

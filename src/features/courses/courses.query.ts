@@ -496,6 +496,100 @@ export async function getUserEnrollments(userId: string): Promise<{
 }
 
 /**
+ * Get student enrollments for a specific organization
+ * Used for the student dashboard in a specific app
+ */
+export async function getStudentEnrollmentsForOrg(
+  userId: string,
+  organizationId: string
+): Promise<{
+  data: Array<{
+    id: string;
+    viewed_lessons: string[];
+    last_viewed_lesson_id: string | null;
+    enrolled_at: string;
+    course: {
+      id: string;
+      title: string;
+      description: string | null;
+      slug: string;
+      thumbnail_url: string | null;
+      lesson_count: number;
+    } | null;
+  }> | null;
+  error: string | null;
+}> {
+  const supabase = await createClientServer();
+
+  const { data, error } = await supabase
+    .from('course_enrollments')
+    .select(
+      `
+      id,
+      viewed_lessons,
+      last_viewed_lesson_id,
+      enrolled_at,
+      course:courses!inner(
+        id,
+        title,
+        description,
+        slug,
+        thumbnail_url,
+        organization_id
+      )
+    `
+    )
+    .eq('user_id', userId)
+    .eq('status', 'active')
+    .eq('courses.organization_id', organizationId)
+    .order('enrolled_at', { ascending: false });
+
+  if (error) {
+    return { data: null, error: error.message };
+  }
+
+  // Get lesson counts for each course
+  const coursesWithLessonCount = await Promise.all(
+    (data || []).map(async (enrollment) => {
+      // course comes as object (not array) because of !inner join
+      const courseData = enrollment.course as unknown as {
+        id: string;
+        title: string;
+        description: string | null;
+        slug: string;
+        thumbnail_url: string | null;
+        organization_id: string;
+      } | null;
+
+      if (!courseData) {
+        return { ...enrollment, course: null };
+      }
+
+      // Get lesson count for this course
+      const { count } = await supabase
+        .from('lessons')
+        .select('id', { count: 'exact', head: true })
+        .eq('course_id', courseData.id)
+        .eq('is_published', true);
+
+      return {
+        ...enrollment,
+        course: {
+          id: courseData.id,
+          title: courseData.title,
+          description: courseData.description,
+          slug: courseData.slug,
+          thumbnail_url: courseData.thumbnail_url,
+          lesson_count: count || 0,
+        },
+      };
+    })
+  );
+
+  return { data: coursesWithLessonCount, error: null };
+}
+
+/**
  * Check if a user has active enrollment
  */
 export async function hasActiveEnrollment(

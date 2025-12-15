@@ -98,3 +98,45 @@ export async function reorderModules(
 
   return { success: true, error: null };
 }
+
+/**
+ * Update module navigation settings (custom label, navbar/footer visibility)
+ */
+export async function updateModuleSettings(
+  organizationId: string,
+  moduleType: string,
+  settings: {
+    customLabel?: string | null;
+    showInNavbar?: boolean;
+    showInFooter?: boolean;
+  }
+): Promise<{ success: boolean; error: string | null }> {
+  const supabase = createAdminClient();
+
+  const updateData: Record<string, unknown> = {
+    updated_at: new Date().toISOString(),
+  };
+
+  if (settings.customLabel !== undefined) {
+    // Empty string becomes null
+    updateData.custom_label = settings.customLabel?.trim() || null;
+  }
+  if (settings.showInNavbar !== undefined) {
+    updateData.show_in_navbar = settings.showInNavbar;
+  }
+  if (settings.showInFooter !== undefined) {
+    updateData.show_in_footer = settings.showInFooter;
+  }
+
+  const { error } = await supabase
+    .from('app_modules')
+    .update(updateData)
+    .eq('organization_id', organizationId)
+    .eq('type', moduleType);
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  return { success: true, error: null };
+}
