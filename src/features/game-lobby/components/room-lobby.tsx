@@ -96,7 +96,7 @@ export function RoomLobby({ room, currentPlayer }: RoomLobbyProps) {
 
     const formData = new FormData();
     formData.append('roomId', room.id);
-    formData.append('hostPlayerId', currentPlayer.id);
+    formData.append('playerId', currentPlayer.id);
     formData.append('roomCode', room.code);
     formData.append('locale', locale);
 

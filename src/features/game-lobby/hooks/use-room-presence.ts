@@ -143,11 +143,16 @@ export function usePlayersRealtime(roomId: string) {
 
     // Initial fetch
     const fetchPlayers = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('game_players')
         .select('*')
         .eq('room_id', roomId)
         .order('joined_at', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching players:', error);
+        return;
+      }
 
       if (data) {
         setPlayers(data as Player[]);
@@ -168,6 +173,7 @@ export function usePlayersRealtime(roomId: string) {
           filter: `room_id=eq.${roomId}`,
         },
         (payload) => {
+          console.log('Realtime event:', payload.eventType, payload);
           if (payload.eventType === 'INSERT') {
             setPlayers((prev) => [...prev, payload.new as Player]);
           } else if (payload.eventType === 'UPDATE') {
@@ -183,7 +189,9 @@ export function usePlayersRealtime(roomId: string) {
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Realtime subscription status:', status);
+      });
 
     return () => {
       channel.unsubscribe();
