@@ -148,3 +148,40 @@ export function PlayerListSimple({
     </div>
   );
 }
+
+interface PlayerListWithPlayersProps {
+  players: Player[];
+  currentPlayerId: string;
+  isHost: boolean;
+  onKickPlayer?: (playerId: string) => void;
+}
+
+/**
+ * PlayerList that receives players directly (no internal subscription)
+ * Use this when the parent component already has a realtime subscription
+ */
+export function PlayerListWithPlayers({
+  players,
+  currentPlayerId,
+  isHost,
+  onKickPlayer,
+}: PlayerListWithPlayersProps) {
+  return (
+    <div className="space-y-2">
+      <h3 className="font-semibold text-lg">
+        Jugadores ({players.length})
+      </h3>
+      <div className="space-y-2">
+        {players.map((player) => (
+          <PlayerCard
+            key={player.id}
+            player={player}
+            isCurrentPlayer={player.id === currentPlayerId}
+            canKick={isHost && !player.is_host && player.id !== currentPlayerId}
+            onKick={() => onKickPlayer?.(player.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}

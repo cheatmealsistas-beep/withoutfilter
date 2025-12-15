@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { createClient as createClientBrowser } from '@/shared/database/supabase/client';
 import type { GameState, GameSession } from '../types';
 
@@ -17,11 +17,20 @@ export function useGameSession({
 }: UseGameSessionOptions) {
   const [gameState, setGameState] = useState<GameState | null>(initialState);
   const [isLoading, setIsLoading] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+
+  // Use ref to track subscription state
+  const channelRef = useRef<ReturnType<ReturnType<typeof createClientBrowser>['channel']> | null>(null);
 
   // Subscribe to game session changes
   useEffect(() => {
     const supabase = createClientBrowser();
     console.log('[useGameSession] Setting up realtime for room:', roomId);
+
+    // Clean up any existing channel first
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+    }
 
     const channel = supabase
       .channel(`game-session:${roomId}`)
@@ -34,15 +43,15 @@ export function useGameSession({
           filter: `room_id=eq.${roomId}`,
         },
         (payload) => {
-          console.log('[useGameSession] game_sessions event:', payload.eventType, payload);
+          console.log('[useGameSession] game_sessions event:', payload.eventType);
           if (payload.new) {
             const session = payload.new as GameSession;
 
             setGameState((prev) => {
               if (!prev) return prev;
 
-              const answers = session.round_answers as Record<string, { answer: string }>;
-              const votes = session.round_votes as Record<string, string>;
+              const answers = session.round_answers as Record<string, { answer: string }> | null;
+              const votes = session.round_votes as Record<string, string> | null;
 
               // Calculate time remaining
               let timeRemaining = 0;
@@ -57,20 +66,39 @@ export function useGameSession({
                 (p) => p.id === session.current_player_id
               ) || prev.hotSeatPlayer;
 
-              return {
+              // Parse answers correctly - handle both formats
+              const parsedAnswers: Record<string, string> = {};
+              if (answers) {
+                for (const [k, v] of Object.entries(answers)) {
+                  if (typeof v === 'string') {
+                    parsedAnswers[k] = v;
+                  } else if (v && typeof v === 'object' && 'answer' in v) {
+                    parsedAnswers[k] = v.answer;
+                  }
+                }
+              }
+
+              const newState: GameState = {
                 ...prev,
                 currentRound: session.current_round,
                 phase: session.phase || 'showing_question',
                 content: session.current_content,
                 hotSeatPlayer,
                 timeRemaining,
-                answers: Object.fromEntries(
-                  Object.entries(answers || {}).map(([k, v]) => [k, v.answer])
-                ),
+                answers: parsedAnswers,
                 votes: votes || {},
                 hasAnswered: !!(answers && answers[playerId]),
                 hasVoted: !!(votes && votes[playerId]),
               };
+
+              console.log('[useGameSession] Updated state:', {
+                phase: newState.phase,
+                currentRound: newState.currentRound,
+                answersCount: Object.keys(newState.answers).length,
+                votesCount: Object.keys(newState.votes).length,
+              });
+
+              return newState;
             });
           }
         }
@@ -84,18 +112,52 @@ export function useGameSession({
           filter: `room_id=eq.${roomId}`,
         },
         (payload) => {
-          console.log('[useGameSession] game_players event:', payload.eventType, payload);
-          // Refresh players on score updates
-          refreshPlayers();
+          console.log('[useGameSession] game_players event:', payload.eventType);
+          // Update specific player instead of full refresh
+          if (payload.new) {
+            const updatedPlayer = payload.new as {
+              id: string;
+              display_name: string;
+              avatar_emoji: string;
+              score: number;
+              is_host: boolean;
+              is_connected: boolean;
+            };
+
+            setGameState((prev) => {
+              if (!prev) return prev;
+
+              const updatedPlayers = prev.players.map((p) =>
+                p.id === updatedPlayer.id ? { ...p, ...updatedPlayer } : p
+              );
+
+              // Sort by score descending
+              updatedPlayers.sort((a, b) => (b.score || 0) - (a.score || 0));
+
+              const hotSeatPlayer = updatedPlayers.find(
+                (p) => p.id === prev.hotSeatPlayer?.id
+              ) || prev.hotSeatPlayer;
+
+              return {
+                ...prev,
+                players: updatedPlayers,
+                hotSeatPlayer,
+              };
+            });
+          }
         }
       )
       .subscribe((status) => {
         console.log('[useGameSession] Subscription status:', status);
+        setIsConnected(status === 'SUBSCRIBED');
       });
+
+    channelRef.current = channel;
 
     return () => {
       console.log('[useGameSession] Cleaning up realtime');
       supabase.removeChannel(channel);
+      channelRef.current = null;
     };
   }, [roomId, playerId]);
 
@@ -147,6 +209,7 @@ export function useGameSession({
   return {
     gameState,
     isLoading,
+    isConnected,
     refreshGameState,
     refreshPlayers,
   };

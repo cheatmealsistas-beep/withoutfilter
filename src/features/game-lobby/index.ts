@@ -49,6 +49,7 @@ export {
 export {
   useRoomPresence,
   usePlayersRealtime,
+  useLobbyRealtime,
 } from './hooks/use-room-presence';
 
 // Components
@@ -57,6 +58,7 @@ export {
   JoinRoomForm,
   PlayerList,
   PlayerListSimple,
+  PlayerListWithPlayers,
   RoomConfig,
   RoomLobby,
   ShareRoom,

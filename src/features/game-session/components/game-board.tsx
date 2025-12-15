@@ -25,7 +25,7 @@ export function GameBoard({
   locale,
   isHost,
 }: GameBoardProps) {
-  const { gameState, refreshGameState } = useGameSession({
+  const { gameState, isConnected } = useGameSession({
     roomId,
     playerId,
     initialState: initialGameState,
@@ -37,6 +37,7 @@ export function GameBoard({
   const [isAdvancing, setIsAdvancing] = useState(false);
 
   // Handle phase transitions - only for showing_question -> answering
+  // ONLY the host triggers the server action to avoid race conditions
   useEffect(() => {
     if (!gameState) return;
 
@@ -44,17 +45,20 @@ export function GameBoard({
       setShowingQuestion(true);
 
       // Auto-transition to answering after showing question
+      // All clients show the countdown, but ONLY host triggers the DB update
       const timer = setTimeout(() => {
         setShowingQuestion(false);
-        // Trigger phase change via action
-        handlePhaseChange();
+        // Only host triggers the phase change action to prevent race conditions
+        if (isHost) {
+          handlePhaseChange();
+        }
       }, TIMING.SHOWING_QUESTION * 1000);
 
       return () => clearTimeout(timer);
     } else {
       setShowingQuestion(false);
     }
-  }, [gameState?.phase, gameState?.currentRound]);
+  }, [gameState?.phase, gameState?.currentRound, isHost]);
 
   const handlePhaseChange = async () => {
     const formData = new FormData();
@@ -156,6 +160,13 @@ export function GameBoard({
           )}
 
           <div className="flex items-center gap-2">
+            {/* Connection indicator */}
+            <span
+              className={`w-2 h-2 rounded-full ${
+                isConnected ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'
+              }`}
+              title={isConnected ? 'Conectado' : 'Reconectando...'}
+            />
             {isHost && (
               <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                 Host

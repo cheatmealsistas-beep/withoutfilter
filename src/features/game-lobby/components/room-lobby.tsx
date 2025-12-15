@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { Button } from '@/shared/components/ui/button';
-import { PlayerList } from './player-list';
+import { PlayerListWithPlayers } from './player-list';
 import { RoomConfig } from './room-config';
 import { ShareRoom } from './share-room';
 import {
@@ -14,7 +14,7 @@ import {
   updateConfigAction,
 } from '../game-lobby.actions';
 import { startGameAction } from '@/features/game-session/game-session.actions';
-import { usePlayersRealtime } from '../hooks/use-room-presence';
+import { useLobbyRealtime } from '../hooks/use-room-presence';
 import type { Room, Player, RoomConfig as RoomConfigType } from '../types';
 import { brand } from '@/shared/config/brand';
 
@@ -26,11 +26,22 @@ interface RoomLobbyProps {
 export function RoomLobby({ room, currentPlayer }: RoomLobbyProps) {
   const locale = useLocale();
   const router = useRouter();
-  const players = usePlayersRealtime(room.id);
   const [isUpdating, setIsUpdating] = useState(false);
-
   const [isStarting, setIsStarting] = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
+
+  // Callback for when game starts (triggered by realtime)
+  const handleGameStart = useCallback(() => {
+    router.push(`/${locale}/game/${room.code}/play`);
+  }, [router, locale, room.code]);
+
+  // Unified realtime hook - subscribes to both players AND room status
+  const { players, roomStatus } = useLobbyRealtime({
+    roomId: room.id,
+    roomCode: room.code,
+    locale,
+    onGameStart: handleGameStart,
+  });
 
   const isHost = currentPlayer.is_host;
   const allReady = players.length > 0 && players.every((p) => p.is_ready);
@@ -126,8 +137,8 @@ export function RoomLobby({ room, currentPlayer }: RoomLobbyProps) {
 
         {/* Players */}
         <div className="bg-card rounded-xl p-4 border">
-          <PlayerList
-            roomId={room.id}
+          <PlayerListWithPlayers
+            players={players}
             currentPlayerId={currentPlayer.id}
             isHost={isHost}
             onKickPlayer={isHost ? handleKickPlayer : undefined}
