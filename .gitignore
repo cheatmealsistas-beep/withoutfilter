@@ -60,3 +60,4 @@ src/i18n/generated/
 # Planning files (move to docs/ when done)
 *.plan.md
 *.wip.md
+.env.dev

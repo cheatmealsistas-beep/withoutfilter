@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 import type {
   CreateRoomState,
   JoinRoomState,
@@ -52,9 +53,16 @@ export async function createRoomAction(
     config,
   });
 
-  if (result.success && result.roomCode) {
-    // Store player ID in cookie or session for reconnection
-    // For now, redirect to the room
+  if (result.success && result.roomCode && result.playerId) {
+    // Store player ID in cookie for reconnection
+    const cookieStore = await cookies();
+    cookieStore.set(`player_${result.roomCode}`, result.playerId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24, // 24 hours
+    });
+
     redirect(`/${locale}/game/${result.roomCode}`);
   }
 
@@ -79,7 +87,16 @@ export async function joinRoomAction(
     playerAvatar,
   });
 
-  if (result.success && result.roomCode) {
+  if (result.success && result.roomCode && result.playerId) {
+    // Store player ID in cookie for reconnection
+    const cookieStore = await cookies();
+    cookieStore.set(`player_${result.roomCode}`, result.playerId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24, // 24 hours
+    });
+
     redirect(`/${locale}/game/${result.roomCode}`);
   }
 
