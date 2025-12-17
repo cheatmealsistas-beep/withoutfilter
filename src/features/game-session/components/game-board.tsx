@@ -36,25 +36,47 @@ export function GameBoard({
   );
   const [isAdvancing, setIsAdvancing] = useState(false);
 
-  // Handle phase transitions - only for showing_question -> answering
-  // ONLY the host triggers the server action to avoid race conditions
+  // Handle phase transitions - Server-Authoritative approach
+  // Non-host clients ONLY react to phase changes from realtime, never trigger them
+  // Host triggers the phase change, but with retry logic for poor connections
   useEffect(() => {
     if (!gameState) return;
 
     if (gameState.phase === 'showing_question') {
       setShowingQuestion(true);
 
-      // Auto-transition to answering after showing question
-      // All clients show the countdown, but ONLY host triggers the DB update
-      const timer = setTimeout(() => {
-        setShowingQuestion(false);
-        // Only host triggers the phase change action to prevent race conditions
-        if (isHost) {
-          handlePhaseChange();
-        }
-      }, TIMING.SHOWING_QUESTION * 1000);
+      // Only host triggers the phase transition
+      if (isHost) {
+        const timer = setTimeout(async () => {
+          setShowingQuestion(false);
+          // Retry logic for poor connection
+          let retries = 3;
+          while (retries > 0) {
+            try {
+              await handlePhaseChange();
+              break;
+            } catch (error) {
+              retries--;
+              if (retries > 0) {
+                console.log(`[GameBoard] Phase change failed, retrying... (${retries} left)`);
+                await new Promise((r) => setTimeout(r, 1000));
+              }
+            }
+          }
+        }, TIMING.SHOWING_QUESTION * 1000);
 
-      return () => clearTimeout(timer);
+        return () => clearTimeout(timer);
+      } else {
+        // Non-host: just show the question, phase change will come via realtime
+        // Add a slightly longer timeout as fallback UI only (not triggering action)
+        const uiTimer = setTimeout(() => {
+          // Only update local UI state, don't trigger server action
+          // The actual phase change will come from realtime when host triggers it
+          setShowingQuestion(false);
+        }, (TIMING.SHOWING_QUESTION + 2) * 1000); // +2s buffer for latency
+
+        return () => clearTimeout(uiTimer);
+      }
     } else {
       setShowingQuestion(false);
     }
